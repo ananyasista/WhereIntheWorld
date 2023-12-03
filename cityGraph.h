@@ -31,9 +31,9 @@ public:
         region = regName;
     }
 
-    void insertCity(City start) {
+    void insertCity(City &start) {
         regionGraph[start] = {};
-        for(auto city : regionGraph){
+        for(auto &city : regionGraph){
             if(city.first != start){
                 if(start.distanceBetween(city.first) <= 50){
                     city.second.push_back(make_pair(start, start.distanceBetween(city.first)));
@@ -53,7 +53,7 @@ public:
         // cout << distance[ourNull].first.getName();
         for(auto city : regionGraph)
             distance.emplace(city.first, make_pair(City(), DBL_MAX));
-        distance.at(start) = make_pair(City(), 0);
+        distance[start] = make_pair(City(), 0);
          // push start to pq
         pq.push(make_pair(start, 0)); // City node, distance
         while (!pq.empty()) {
@@ -69,13 +69,13 @@ public:
                 }
             }
         }
+        cout << regionGraph.size() << endl;
+        cout << distance.size() << endl;
         // now distance is complete
         stack<City> roadtrip;
-        double totalDistance = 0;
         City current = end;
         while(current != start){
             roadtrip.push(current);
-            totalDistance += distance[current].second;
             current = distance[current].first;
         }
 
@@ -84,11 +84,11 @@ public:
         // print trip
         int step = 1;
         while(!roadtrip.empty()){
-            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
+            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " Distance"
+                                                                                                           " Between: " << distance[roadtrip.top()].second << endl;
             roadtrip.pop();
             step++;
         }
-        cout << "Total Distance To Travel: " << totalDistance << endl;
     }
 
     void prim(string st, string en) {
@@ -143,7 +143,7 @@ public:
 
     City findCity(string cityName) {
         for(auto city : regionGraph) {
-            if(cityName == city.first.getCountryName())
+            if(cityName == city.first.getName())
                 return city.first;
         }
         return City();

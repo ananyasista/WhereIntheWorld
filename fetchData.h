@@ -34,11 +34,9 @@ City parseCsv(string &csvLine) {
     }
 
     //read city code
-    getline(iss, val);
+    getline(iss, val, ',');
     string cityCode = val;
 
-    //city name + code
-    string cityName = cName + ", " + cityCode;
 
     //skip to countryName
     for(int i = 0; i < 3; i++) {
@@ -58,9 +56,13 @@ City parseCsv(string &csvLine) {
     double longitude;
     istringstream(val) >> longitude;
 
+    //city name + code
+    string cityName = cName + ", " + cityCode;
+
     //city object
     return City(id, cityName, countryName, longitude, latitude);
 };
+
 
 
 void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica)
@@ -76,6 +78,37 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     regionToGraph["Asia"] = eurasica;
     regionToGraph["Africa"] = eurasica;
 
+
+    //parse through countrytoregions and find the americas region
+    //Need: name, 10, region
+    ifstream fileCountries("../ContinentsData/countries.csv");
+    string val;
+
+    //read name
+    for(int i = 0; i < 1; i++) {
+        getline(fileCountries, val, ',');
+    }
+    getline(fileCountries, val);
+    string countryName = val;
+
+    //skip to region
+    for(int i = 0; i < 10; i++) {
+        getline(fileCountries, val, ',');
+    }
+
+    //read region
+    getline(fileCountries, val);
+    string region = val;
+
+    //hold countryToRegion
+    //read and parse city file
+    string line;
+    while(getline(fileCountries, line)) {
+        countryToRegion.emplace(countryName, region);
+        //regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
+    }
+    fileCountries.close();
+
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
     // wikiDataId
     //Need: name, country_name, lat, long
@@ -89,21 +122,19 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     }
     // cout << "here" << endl;
     //Map to store city data
-    map<string, vector<pair<string, double>>> cityMap;
+    // map<string, vector<pair<string, double>>> cityMap;
 
-    //read and parse city file
-    string line;
 
     while(getline(file, line)) {
         //temp test
         City city = parseCsv(line);
 
-        // cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
-
-        cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());
-        // regionToGraph[countryToRegion[city.getCountryName]].insert(city);
-        regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
+//        cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
+        //cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());
+        // regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
+        americas.insertCity(city);
     }
 
     file.close();
+
 }
