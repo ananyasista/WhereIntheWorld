@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
@@ -9,8 +10,6 @@ class City {
 private:
     string name;
     int id;
-    // string population;
-    // string timeZone;
     string countryName;
     double longitude;
     double latitude;
@@ -26,21 +25,35 @@ public:
         longitude = lon;
         latitude = lat;
     }
-    string getName(){
+
+    City() { // default constructor
+        id = -1;
+        name = "";
+        countryName = "";
+        longitude = -1;
+        latitude = -1;
+    }
+
+    string getName() const {
         return name;
     }
-    string getCountryName() {
+
+    string getCountryName() const {
         return countryName;
     }
-    double getLatitude() {
+
+    double getLatitude() const {
         return latitude;
     }
-    double getLongitude() {
+
+    double getLongitude() const {
         return longitude;
     }
+
     int getId() const{
         return id;
     }
+
     double distanceBetween(City a) {
         // https://www.geeksforgeeks.org/program-distance-two-points-earth/
         // convert to radians
@@ -59,11 +72,20 @@ public:
         double rad = 3956; // in miles
         return distance * rad;
     }
+
     string findContinent(unordered_map<string, string> countryList){
         return countryList[countryName];
     }
 
     bool operator<(const City &city) const {
         return id < city.getId();
+    }
+
+    bool operator!=(const City &city) const {
+        return id != city.getId();
+    }
+
+    bool operator==(const City &city) const {
+        return id == city.getId();
     }
 };

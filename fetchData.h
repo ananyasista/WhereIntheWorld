@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,7 +7,7 @@
 #include <map>
 #include <filesystem>
 #include "city.h"
-// #include "cityGraph.h"
+#include "cityGraph.h"
 
 using namespace std;
 // how are we getting data and building our graphs to be used in our program
@@ -18,7 +19,6 @@ City parseCsv(string &csvLine) {
     istringstream iss(csvLine);
     string val;
 
-
     //read id
     getline(iss, val, ',');
     int id;
@@ -26,10 +26,22 @@ City parseCsv(string &csvLine) {
 
     //read city name
     getline(iss, val, ',');
-    string cityName = val;
+    string cName = val;
+
+    //skip to city code
+    for(int i = 0; i < 1; i++) {
+        getline(iss, val, ',');
+    }
+
+    //read city code
+    getline(iss, val);
+    string cityCode = val;
+
+    //city name + code
+    string cityName = cName + ", " + cityCode;
 
     //skip to countryName
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 3; i++) {
         getline(iss, val, ',');
     }
 
@@ -51,14 +63,23 @@ City parseCsv(string &csvLine) {
 };
 
 
-void getData()
+void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica)
 {
-    // CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
+    //CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
+    map<string, string> countryToRegion; // fill using countries.csv
+
+    map<string, CityGraph> regionToGraph; // use when adding cities to a graph
+    regionToGraph["Americas"] = americas;
+    regionToGraph["Europe"] = eurasica;
+    regionToGraph["Polar"] = polar;
+    regionToGraph["Oceania"] = oceania;
+    regionToGraph["Asia"] = eurasica;
+    regionToGraph["Africa"] = eurasica;
 
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
     // wikiDataId
     //Need: name, country_name, lat, long
-    string citiesFile = "../ContinentsData/cities.csv";
+    string citiesFile = "../ContinentsData/floridaCities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -66,7 +87,7 @@ void getData()
         cout << "error" << endl;
         return;
     }
-    cout << "here" << endl;
+    // cout << "here" << endl;
     //Map to store city data
     map<string, vector<pair<string, double>>> cityMap;
 
@@ -77,17 +98,12 @@ void getData()
         //temp test
         City city = parseCsv(line);
 
-        cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city
-        .getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
+        // cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
 
         cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());
+        // regionToGraph[countryToRegion[city.getCountryName]].insert(city);
+        regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
     }
 
     file.close();
-
-
-
-
-
-
 }

@@ -4,7 +4,6 @@ project(P3)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(P3 main.cpp
-        country.h
         city.h
         roadtrip.h
         cityGraph.h

@@ -1,3 +1,4 @@
+#pragma once
 #include "cityGraph.h"
 
 // have a boolean keeping track of which algorithm is being used
