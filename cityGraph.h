@@ -1,5 +1,5 @@
 #pragma once
-#include "city.h"
+#include "disjointSet.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
@@ -7,6 +7,7 @@
 #include <float.h>
 #include <iostream>
 #include <climits>
+
 using namespace std;
 
 typedef pair<City, double> cPair; // node, distance
@@ -30,7 +31,9 @@ public:
     CityGraph(string regName) {
         region = regName;
     }
-
+    string getName() {
+        return region;
+    }
     void insertCity(City &start) {
         regionGraph[start] = {};
         for(auto &city : regionGraph){
@@ -43,15 +46,12 @@ public:
         }
     }
 
-    void dijkstra(string st, string en)
-    {
+    void dijkstra(string st, string en) {
+        // used stepik code for reference
         City start = findCity(st);
         City end = findCity(en);
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         map<City, pair<City, double>> distance; // pair<Pred, Total Distance>
-        // City ourNull (-1, "", "", 0.0, 0.0);
-        // distance.insert(make_pair(ourNull, make_pair(ourNull,0)));
-        // cout << distance[ourNull].first.getName();
         for(auto city : regionGraph)
             distance.emplace(city.first, make_pair(City(), DBL_MAX));
         distance[start] = make_pair(City(), 0);
@@ -85,19 +85,53 @@ public:
         // print trip
         int step = 1;
         while(!roadtrip.empty()){
-            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " Distance"
-                                                                                                           " Between: " << distance[roadtrip.top()].second << endl;
+            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " Distance"" Between: " << distance[roadtrip.top()].second << endl;
             roadtrip.pop();
             step++;
         }
     }
+    void kruskal(string st, string en) {
+        // use stepik module 8 solutions
+        City start = findCity(st);
+        City end = findCity(en);
+        DisjointSet ds;
+        multimap<City, pair<City, double>> edgeList = ds.makeSet(regionGraph);
+        double totalDistance = 0;
+        for(const auto& entry : edgeList){
+            double w = entry.second.second;
+            pair<City, City> p = make_pair(entry.first, entry.second.first);
+            City u = p.first;
+            City v = p.second;
+            City x = ds.findRoot(u);
+            City y = ds.findRoot(v);
+            if(x != y) {
+                totalDistance += w;
+                ds.unionSet(x, y);
+            }
+        }
+        stack<City> roadtrip;
+        City current = end;
+        while(current != start) {
+            roadtrip.push(current);
+            current = ds.findRoot(current);
+        }
 
+        roadtrip.push(start);
+
+        // print trip
+        int step = 1;
+        while(!roadtrip.empty()){
+            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
+            // " Distance"" Between: " << distance[roadtrip.top()].second <<
+            roadtrip.pop();
+            step++;
+        }
+    }
     void prim(string st, string en) {
         City start = findCity(st);
         City end = findCity(en);
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         // start is our source vector
-
         map<City, cPair> parent;
         for(auto city : regionGraph)
             parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));

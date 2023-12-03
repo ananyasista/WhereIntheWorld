@@ -7,7 +7,7 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     //call getData with the regions graph
     getData(americas, polar, oceania, eurasica);
-    americas.dijkstra("Tampa, FL", "Jacksonville, FL");
+    americas.dijkstra("Miami, FL", "Destin, FL");
 
     return 0;
 }
