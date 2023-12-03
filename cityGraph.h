@@ -116,21 +116,36 @@ public:
         City start = findCity(st);
         City end = findCity(en);
         map<City, vector<cPair>> mst;
-        DisjointSet ds;
-//        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
-        double totalDistance = 0;
-        for(const auto& entry : edgeList){
-            double w = entry.first;
-            pair<City, City> p = entry.second;
-            City u = p.first;
-            City v = p.second;
-            City x = ds.findRoot(u);
-            City y = ds.findRoot(v);
-            if(x != y) {
-                mst[u].push_back(make_pair(v, w));
-                mst[v].push_back(make_pair(u, w));
-                ds.unionSet(x, y);
-            }
+//        DisjointSet ds;
+////        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
+//        double totalDistance = 0;
+//        for(const auto& entry : edgeList){
+//            double w = entry.first;
+//            pair<City, City> p = entry.second;
+//            City u = p.first;
+//            City v = p.second;
+//            City x = ds.findRoot(u);
+//            City y = ds.findRoot(v);
+//            if(x != y) {
+//                mst[u].push_back(make_pair(v, w));
+//                mst[v].push_back(make_pair(u, w));
+//                ds.unionSet(x, y);
+//            }
+//        }
+
+        map<City, City> parent;
+        map<City, int> rank;
+
+        for(auto city : regionGraph){
+            parent[city.first] = city.first;
+            rank[city.first] = 0;
+        }
+
+        for(auto edge : edgeList){
+            City u = edge.second.first;
+            City v = edge.second.second;
+
+            
         }
 
         //dfs from kapoor's lecture
