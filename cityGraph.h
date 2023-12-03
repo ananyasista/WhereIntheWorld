@@ -23,6 +23,7 @@ private:
     };
     map<int, string> cityIDs;
     map<double, City> sortedLong;
+    multimap<double, pair<City, City>> edgeList;
 
 public:
     CityGraph(){
@@ -60,6 +61,8 @@ public:
             if(dist <= 50){
                 regionGraph[it->second].push_back(make_pair(start, dist));
                 regionGraph[start].push_back(make_pair(it->second, dist));
+                edgeList.insert({dist, {start, it->second}});
+                edgeList.insert({dist, {it->second, start}});
             }
         }
     }
@@ -114,7 +117,7 @@ public:
         City end = findCity(en);
         map<City, vector<cPair>> mst;
         DisjointSet ds;
-        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
+//        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
         double totalDistance = 0;
         for(const auto& entry : edgeList){
             double w = entry.first;

@@ -146,27 +146,27 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         switch(regionToGraph[countryToRegion[city.getCountryName()]]) {
             case 0:
                 americas.insertCity(city);
-                cout << "Americas added" << endl;
+//                cout << "Americas added" << endl;
                 break;
             case 1:
                 eurasica.insertCity(city);
-                cout << "Eurasica added" << endl;
+//                cout << "Eurasica added" << endl;
                 break;
             case 2:
                 polar.insertCity(city);
-                cout << "Polar added" << endl;
+//                cout << "Polar added" << endl;
                 break;
             case 3:
                 oceania.insertCity(city);
-                cout << "Oceania added" << endl;
+//                cout << "Oceania added" << endl;
                 break;
             case 4:
                 eurasica.insertCity(city);
-                cout << "Eurasica added" << endl;
+//                cout << "Eurasica added" << endl;
                 break;
             case 5:
                 eurasica.insertCity(city);
-                cout << "Eurasica added" << endl;
+//                cout << "Eurasica added" << endl;
                 break;
             default:
                 americas.insertCity(city);
