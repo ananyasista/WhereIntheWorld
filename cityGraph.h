@@ -37,6 +37,7 @@ public:
             if(city.first != start){
                 if(start.distanceBetween(city.first) <= 50){
                     city.second.push_back(make_pair(start, start.distanceBetween(city.first)));
+                    regionGraph[start].push_back(make_pair(city.first, start.distanceBetween(city.first)));
                 }
             }
         }
