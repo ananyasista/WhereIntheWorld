@@ -10,9 +10,31 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     //call getData with the regions graph
     getData(americas, polar, oceania, eurasica);
-    cout << "DIJKSTRA's --------------" << endl;
-    americas.dijkstra("Miami Gardens, FL", "Coral City, FL");
+    cout << "Region Graph Size: " << endl;
+    cout << "Americas Size: " << americas.getSize() << endl;
+    cout << "Polar Size: " << polar.getSize() << endl;
+    cout << "Eur Size: " << eurasica.getSize() << endl;
+    cout << "Oceania Size: " << oceania.getSize() << endl;
+//    cout << "DIJKSTRA's --------------" << endl;
+//    cout << "Toronto to Miami: " << endl;
+//    americas.dijkstra("Toronto, ON", "Miami, FL");
+//    cout << "Los Angeles to Durango, Mexico: " << endl;
+//    americas.dijkstra("Los Angeles, CA", "El Salto, DUR");
+//    cout << "Toronto to Miami: " << endl;
+//    americas.dijkstra("Toronto, ON", "Miami, FL");
+//    cout << "Toronto to Miami: " << endl;
+//    americas.dijkstra("Toronto, ON", "Miami, FL");
+//    americas.dijkstra("Miami Gardens, FL", "Carol City, FL");
     cout << "KRUSKAL's --------------" << endl;
-//    americas.kruskal("Vilano Beach, FL", "Jacksonville, FL");
+//    americas.kruskal("Villano Beach, FL", "Jacksonville, FL");
+    cout << "Toronto to Miami: " << endl;
+    americas.kruskal("Toronto, ON", "Miami, FL");
+    cout << "Los Angeles to Durango Mexico: " << endl;
+    americas.kruskal("Los Angeles, CA", "El Salto, DUR");
+//    cout << "Toronto to Miami: " << endl;
+//    americas.kruskal("Toronto, ON", "Miami, FL");
+//    cout << "Toronto to Miami: " << endl;
+//    americas.kruskal("Toronto, ON", "Miami, FL");
+
     return 0;
 }

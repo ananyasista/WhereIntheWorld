@@ -18,3 +18,25 @@ home::~home()
 {
     delete ui;
 }
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "backend.h" // Include your backend header
+
+MainWindow::MainWindow(QWidget *parent) :
+        QMainWindow(parent),
+        ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    // Instantiate your backend
+    Backend backend;
+
+    // Connect a button click to a backend function
+    connect(ui->pushButton, &QPushButton::clicked, &backend, &Backend::performAction);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}

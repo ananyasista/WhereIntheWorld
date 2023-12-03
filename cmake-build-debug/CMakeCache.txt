@@ -248,6 +248,9 @@ P3_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 P3_SOURCE_DIR:STATIC=C:/Users/strau/OneDrive/Desktop/COP3530/Projects/P3
 
+//The directory containing a CMake configuration file for Qt5Widgets.
+Qt5Widgets_DIR:PATH=Qt5Widgets_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

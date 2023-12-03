@@ -12,6 +12,8 @@ using namespace std;
 
 typedef pair<City, double> cPair; // node, distance
 
+
+
 class CityGraph {
 private:
     string region;
@@ -20,6 +22,8 @@ private:
         return one.second > two.second;
     };
     map<int, string> cityIDs;
+    map<double, City> sortedLong;
+
 public:
     CityGraph(){
         region = "";
@@ -32,14 +36,30 @@ public:
     string getName() {
         return region;
     }
+
+    int getSize() {
+        return regionGraph.size();
+    }
+
     void insertCity(City &start) {
+        sortedLong[start.getLongitude()] = start;
+        auto lower_bound = sortedLong.lower_bound(start.getLongitude() - 1);
+        auto upper_bound = sortedLong.upper_bound(start.getLongitude() + 1);
+
         regionGraph[start] = {};
-        for(auto &city : regionGraph){
-            if(city.first != start){
-                if(start.distanceBetween(city.first) <= 50){
-                    city.second.push_back(make_pair(start, start.distanceBetween(city.first)));
-                    regionGraph[start].push_back(make_pair(city.first, start.distanceBetween(city.first)));
-                }
+//        for(auto &city : regionGraph){
+//            if(city.first != start){
+//                if(start.distanceBetween(city.first) <= 50){
+//                    city.second.push_back(make_pair(start, start.distanceBetween(city.first)));
+//                    regionGraph[start].push_back(make_pair(city.first, start.distanceBetween(city.first)));
+//                }
+//            }
+//        }
+        for(auto it = lower_bound; it != upper_bound; ++it){
+            double dist = start.distanceBetween(it->second);
+            if(dist <= 50){
+                regionGraph[it->second].push_back(make_pair(start, dist));
+                regionGraph[start].push_back(make_pair(it->second, dist));
             }
         }
     }
@@ -68,8 +88,8 @@ public:
                 }
             }
         }
-        cout << regionGraph.size() << endl;
-        cout << distance.size() << endl;
+        // cout << regionGraph.size() << endl;
+        // cout << distance.size() << endl;
         // now distance is complete
         stack<City> roadtrip;
         City current = end;
@@ -116,6 +136,7 @@ public:
         s.push(start);
         visited.insert(start);
         map<City, cPair> parent;
+        //parent[start] = make_pair(City(), -1);
         double kTotalDistance = 0;
 
         while(!s.empty())
@@ -139,8 +160,8 @@ public:
         City current = end;
         while(current != start) {
             roadtrip.push(current);
-            kTotalDistance += parent.at(current).second;
-            current = parent.at(current).first;
+            kTotalDistance += parent[current].second;
+            current = parent[current].first;
         }
 
         roadtrip.push(start);
@@ -156,56 +177,56 @@ public:
         cout << "Total Distance: " << kTotalDistance << endl;
     }
 
-    void prim(string st, string en) {
-        City start = findCity(st);
-        City end = findCity(en);
-        priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
-        // start is our source vector
-        map<City, cPair> parent;
-        for(auto city : regionGraph)
-            parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
-        set<City> inMst;
-        pq.push(make_pair(start, 0)); // add source vertex to min heap
-
-        while(!pq.empty()) {
-            cPair uPair = pq.top();
-            City u = pq.top().first;
-            pq.pop();
-
-            if (inMst.find(u) != inMst.end())
-                continue;
-            inMst.insert(u);
-            for (auto pair: regionGraph[u]) {
-                City v = pair.first; // child
-                double w = pair.second;
-                if(inMst.find(v) == inMst.end() && parent[v].second > w) {
-                    parent[v] = uPair;
-                    pq.push(make_pair(v, parent[v].second));
-                }
-            }
-        }
-
-
-        stack<City> roadtrip;
-        double totalDistance = 0;
-        City current = end;
-        while(current != start){
-            roadtrip.push(current);
-            totalDistance += parent[current].second;
-            current = parent[current].first;
-        }
-
-        roadtrip.push(start);
-
-        // print trip
-        int step = 1;
-        while(!roadtrip.empty()){
-            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
-            roadtrip.pop();
-            step++;
-        }
-        cout << "Total Distance To Travel: " << totalDistance << endl;
-    }
+//    void prim(string st, string en) {
+//        City start = findCity(st);
+//        City end = findCity(en);
+//        priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
+//        // start is our source vector
+//        map<City, cPair> parent;
+//        for(auto city : regionGraph)
+//            parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
+//        set<City> inMst;
+//        pq.push(make_pair(start, 0)); // add source vertex to min heap
+//
+//        while(!pq.empty()) {
+//            cPair uPair = pq.top();
+//            City u = pq.top().first;
+//            pq.pop();
+//
+//            if (inMst.find(u) != inMst.end())
+//                continue;
+//            inMst.insert(u);
+//            for (auto pair: regionGraph[u]) {
+//                City v = pair.first; // child
+//                double w = pair.second;
+//                if(inMst.find(v) == inMst.end() && parent[v].second > w) {
+//                    parent[v] = uPair;
+//                    pq.push(make_pair(v, parent[v].second));
+//                }
+//            }
+//        }
+//
+//
+//        stack<City> roadtrip;
+//        double totalDistance = 0;
+//        City current = end;
+//        while(current != start){
+//            roadtrip.push(current);
+//            totalDistance += parent[current].second;
+//            current = parent[current].first;
+//        }
+//
+//        roadtrip.push(start);
+//
+//        // print trip
+//        int step = 1;
+//        while(!roadtrip.empty()){
+//            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
+//            roadtrip.pop();
+//            step++;
+//        }
+//        cout << "Total Distance To Travel: " << totalDistance << endl;
+//    }
 
     City findCity(string cityName) {
         for(auto city : regionGraph) {

@@ -115,10 +115,11 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 //    }
 
 
+    cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
     // wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/floridaCities.csv";
+    string citiesFile = "../ContinentsData/cities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -130,7 +131,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     //Map to store city data
     // map<string, vector<pair<string, double>>> cityMap;
 
-    cout << countryToRegion["United States Minor Outlying Islands"] << endl;
+//    cout << countryToRegion["United States Minor Outlying Islands"] << endl;
 
     while(getline(file, line)) {
         //temp test
@@ -145,21 +146,27 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         switch(regionToGraph[countryToRegion[city.getCountryName()]]) {
             case 0:
                 americas.insertCity(city);
+                cout << "Americas added" << endl;
                 break;
             case 1:
                 eurasica.insertCity(city);
+                cout << "Eurasica added" << endl;
                 break;
             case 2:
                 polar.insertCity(city);
+                cout << "Polar added" << endl;
                 break;
             case 3:
                 oceania.insertCity(city);
+                cout << "Oceania added" << endl;
                 break;
             case 4:
                 eurasica.insertCity(city);
+                cout << "Eurasica added" << endl;
                 break;
             case 5:
                 eurasica.insertCity(city);
+                cout << "Eurasica added" << endl;
                 break;
             default:
                 americas.insertCity(city);
