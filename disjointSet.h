@@ -16,18 +16,18 @@ class DisjointSet {
         return one.second > two.second;
     };
 public:
-    multimap<City, pair<City, double>> makeSet(map<City, vector<pair<City, double>>>& graph) {
+    multimap<double, pair<City, City>> makeSet(map<City, vector<pair<City, double>>>& graph) {
         // return a multimap
-        multimap<City, pair<City, double>> edgeList;
+        multimap<double, pair<City, City>> edgeList;
         for(pair<City, vector<pair<City, double>>> city : graph) {
             parent[city.first] = city.first;
             for(auto cityList : city.second) {
-                edgeList.insert({city.first, cityList});
+                edgeList.insert({cityList.second, {city.first, cityList.first}});
             }
         }
         return edgeList;
     }
-    //find root of the set in which vertex k belongs to
+    // find root of the set in which vertex k belongs to
     City findRoot(City k) {
         if(parent[k] == k)
             return k;
@@ -40,5 +40,9 @@ public:
         City y = findRoot(b);
 
         parent[y] = x;
+    }
+
+    City returnParent(City start){
+        return parent[start];
     }
 };

@@ -13,9 +13,6 @@ using namespace std;
 typedef pair<City, double> cPair; // node, distance
 
 class CityGraph {
-    // maybe this should be represented at a graph class
-    // then each instance will represent a continent and the nodes and edges are how all the countries connect and
-    // border each other????
 private:
     string region;
     map<City, vector<pair<City, double>>> regionGraph; // weight will distance
@@ -31,6 +28,7 @@ public:
     CityGraph(string regName) {
         region = regName;
     }
+
     string getName() {
         return region;
     }
@@ -94,26 +92,55 @@ public:
         // use stepik module 8 solutions
         City start = findCity(st);
         City end = findCity(en);
+        map<City, vector<cPair>> mst;
         DisjointSet ds;
-        multimap<City, pair<City, double>> edgeList = ds.makeSet(regionGraph);
+        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
         double totalDistance = 0;
         for(const auto& entry : edgeList){
-            double w = entry.second.second;
-            pair<City, City> p = make_pair(entry.first, entry.second.first);
+            double w = entry.first;
+            pair<City, City> p = entry.second;
             City u = p.first;
             City v = p.second;
             City x = ds.findRoot(u);
             City y = ds.findRoot(v);
             if(x != y) {
-                totalDistance += w;
+                mst[u].push_back(make_pair(v, w));
+                mst[v].push_back(make_pair(u, w));
                 ds.unionSet(x, y);
             }
         }
+
+        //dfs from kapoor's lecture
+        set<City> visited;
+        stack<City> s;
+        s.push(start);
+        visited.insert(start);
+        map<City, cPair> parent;
+        double kTotalDistance = 0;
+
+        while(!s.empty())
+        {
+            City u = s.top();
+            s.pop();
+
+            for (auto pair: regionGraph[u])
+            {
+                City v = pair.first;
+                if (visited.find(v) == visited.end())
+                {
+                    visited.insert(v);
+                    parent[v] = make_pair(u, pair.second);
+                    s.push(v);
+                }
+            }
+        }
+
         stack<City> roadtrip;
         City current = end;
         while(current != start) {
             roadtrip.push(current);
-            current = ds.findRoot(current);
+            kTotalDistance += parent.at(current).second;
+            current = parent.at(current).first;
         }
 
         roadtrip.push(start);
@@ -121,12 +148,14 @@ public:
         // print trip
         int step = 1;
         while(!roadtrip.empty()){
-            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
-            // " Distance"" Between: " << distance[roadtrip.top()].second <<
+            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() <<
+            "Distance Between: " << parent[roadtrip.top()].second << endl;
             roadtrip.pop();
             step++;
         }
+        cout << "Total Distance: " << kTotalDistance << endl;
     }
+
     void prim(string st, string en) {
         City start = findCity(st);
         City end = findCity(en);
@@ -155,6 +184,8 @@ public:
                 }
             }
         }
+
+
         stack<City> roadtrip;
         double totalDistance = 0;
         City current = end;

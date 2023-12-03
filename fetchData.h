@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 #include <filesystem>
-#include "city.h"
 #include "cityGraph.h"
 
 using namespace std;
@@ -71,13 +70,13 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     map<string, string> countryToRegion; // fill using countries.csv
 
     // ISSUE HERE!
-    map<string, CityGraph> regionToGraph; // use when adding cities to a graph
-    regionToGraph["Americas"] = americas;
-    regionToGraph["Europe"] = eurasica;
-    regionToGraph["Polar"] = polar;
-    regionToGraph["Oceania"] = oceania;
-    regionToGraph["Asia"] = eurasica;
-    regionToGraph["Africa"] = eurasica;
+    map<string, int> regionToGraph; // use when adding cities to a graph
+    regionToGraph["Americas"] = 0;
+    regionToGraph["Europe"] = 1;
+    regionToGraph["Polar"] = 2;
+    regionToGraph["Oceania"] = 3;
+    regionToGraph["Asia"] = 4;
+    regionToGraph["Africa"] = 5;
 
 
     //parse through countrytoregions and find the americas region
@@ -106,8 +105,6 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         string region = val;
 
         countryToRegion.emplace(countryName, region);
-
-
         //regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
     }
     fileCountries.close();
@@ -120,7 +117,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
     // wikiDataId
-    //Need: name, country_name, lat, long
+    //Need: name, city code, country_name, lat, long
     string citiesFile = "../ContinentsData/floridaCities.csv";
 
     //open csv file
@@ -133,7 +130,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     //Map to store city data
     // map<string, vector<pair<string, double>>> cityMap;
 
-    cout << countryToRegion["\"United States\""];
+    cout << countryToRegion["United States Minor Outlying Islands"] << endl;
 
     while(getline(file, line)) {
         //temp test
@@ -141,9 +138,32 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 
 //        cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
         //cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());
-        // regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
+//        regionToGraph["Americas"].insertCity(city);
 
         //americas.insertCity(city);
+
+        switch(regionToGraph[countryToRegion[city.getCountryName()]]) {
+            case 0:
+                americas.insertCity(city);
+                break;
+            case 1:
+                eurasica.insertCity(city);
+                break;
+            case 2:
+                polar.insertCity(city);
+                break;
+            case 3:
+                oceania.insertCity(city);
+                break;
+            case 4:
+                eurasica.insertCity(city);
+                break;
+            case 5:
+                eurasica.insertCity(city);
+                break;
+            default:
+                americas.insertCity(city);
+        }
     }
 
     file.close();
