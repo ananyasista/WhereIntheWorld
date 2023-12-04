@@ -7,6 +7,9 @@
 #include <iostream>
 #include <climits>
 #include <sstream>
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 using namespace std;
 
@@ -14,14 +17,15 @@ typedef pair<City, double> cPair; // node, distance
 
 class CityGraph {
 private:
+    atomic<bool> finished;
     string region;
-    map<City, vector<pair<City, double>>> regionGraph; // weight will distance
+    unordered_map<City, vector<pair<City, double>>, City::Hash> regionGraph; // weight will distance
     function<bool(const cPair&, const cPair&)> minDistanceComp = [] (const cPair &one, const cPair &two) {
         return one.second > two.second;
     };
     map<int, string> cityIDs;
     map<double, City> sortedLong;
-    string printTrip(City start, City end, map<City, cPair> parents, bool pathType){
+    string printPath(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
         stack<City> roadtrip;
         City current = end;
         while(current != start){
@@ -112,7 +116,7 @@ public:
         }
 
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
-        map<City, pair<City, double>> distance; // pair<Pred, Total Distance>
+        unordered_map<City, pair<City, double>, City::Hash> distance; // pair<Pred, Total Distance>
         for(auto city : regionGraph)
             distance.emplace(city.first, make_pair(City(), DBL_MAX));
         distance[start] = make_pair(City(), 0);
@@ -132,7 +136,8 @@ public:
             }
         }
 
-        return printTrip(start, end, distance, false);
+        finished = true;
+        return printPath(start, end, distance, false);
 
     }
 
@@ -144,7 +149,7 @@ public:
         }
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         // start is our source vector
-        map<City, cPair> parent;
+        unordered_map<City, cPair, City::Hash> parent;
         for(auto city : regionGraph)
             parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
         set<City> inMst;
@@ -168,7 +173,7 @@ public:
             }
         }
 
-        return printTrip(start, end, parent, true);
+        return printPath(start, end, parent, true);
     }
 
     City findCity(string cityName) {
@@ -178,4 +183,47 @@ public:
         }
         return City();
     }
+
+//    void showProgressBar(){
+//        const int totalProgress = 50;
+//        const int barWidth = 50;
+//
+//        while(!finished) {
+//            for(int progress = 0; progress <= totalProgress *2; ++progress){
+//                float percentage;
+//                int barLength;
+//
+//                if(progress <= totalProgress) {
+//                    percentage = (float)progress / totalProgress;
+//                    barLength = (int)(percentage * barWidth);
+//                } else {
+//                    percentage = (float)(2 * totalProgress - progress) / totalProgress;
+//                    barLength = (int)(percentage * barWidth);
+//                }
+//
+//                cout << "[";
+//                for(int i = 0; i < barWidth; ++i) {
+//                    if(i < barLength){
+//                        cout << "=";
+//                    } else {
+//                        cout << " ";
+//                    }
+//                }
+//                cout << "] " << int(percentage * 100.0) << "%";
+//                cout.flush();
+//
+//                this_thread::sleep_for(chrono::milliseconds(100)); //adjust for speed of bar
+//            }
+//
+//            cout << endl;
+//        }
+//    }
+//
+//    void runD(string start, string end){
+//        thread functionThread(&CityGraph::dijkstra, this, start, end);
+//        thread progressBarThread(&CityGraph::showProgressBar, this);
+//
+//        functionThread.join();
+//        progressBarThread.join();
+//    }
 };

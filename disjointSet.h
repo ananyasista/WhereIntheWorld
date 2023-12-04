@@ -5,6 +5,9 @@
 #include <map>
 #include <climits>
 #include "city.h"
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 using namespace std;
 
@@ -47,4 +50,52 @@ typedef pair<City, double> cPair; // node, distance
 //    }
 //};
 
+//atomic<bool> finished(false);
 
+//put bool above as parameter reference to Dijkstras and Prims, set to true at end
+
+void myFunction(atomic<bool> &status) {
+    for(int i = 0; i <= 100; ++i){
+        this_thread::sleep_for(chrono::milliseconds(50));
+    }
+
+    status = true;
+}
+
+void showProgressBar(atomic<bool> status){
+    const int totalProgress = 50;
+    const int barWidth = 50;
+
+    while(!status) {
+        for(int progress = 0; progress <= totalProgress *2; ++progress){
+            float percentage;
+            int barLength;
+
+            if(progress <= totalProgress) {
+                percentage = (float)progress / totalProgress;
+                barLength = (int)(percentage * barWidth);
+            } else {
+                percentage = (float)(2 * totalProgress - progress) / totalProgress;
+                barLength = (int)(percentage * barWidth);
+            }
+
+            cout << "[";
+            for(int i = 0; i < barWidth; ++i) {
+                if(i < barLength){
+                    cout << "=";
+                } else {
+                    cout << " ";
+                }
+            }
+            cout << "] " << int(percentage * 100.0) << "%";
+            cout.flush();
+
+            this_thread::sleep_for(chrono::milliseconds(100)); //adjust for speed of bar
+        }
+
+        cout << endl;
+    }
+}
+
+//when running functions in main, do the following:
+thread functionThread();

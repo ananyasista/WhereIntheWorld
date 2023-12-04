@@ -127,7 +127,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/floridaCities.csv";
+    string citiesFile = "../ContinentsData/cities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -203,3 +203,56 @@ void printTrip(string itinerary){
 
     cout << "Your itinerary has been downloaded!" << endl;
 }
+
+
+
+struct progressBar {
+    atomic<bool> finished = false;
+
+
+    void showProgressBar(){
+        const int totalProgress = 50;
+        const int barWidth = 50;
+
+        while(!finished) {
+            for(int progress = 0; progress <= totalProgress *2; ++progress){
+                float percentage;
+                int barLength;
+
+                if(progress <= totalProgress) {
+                    percentage = (float)progress / totalProgress;
+                    barLength = (int)(percentage * barWidth);
+                } else {
+                    percentage = (float)(2 * totalProgress - progress) / totalProgress;
+                    barLength = (int)(percentage * barWidth);
+                }
+
+                cout << "[";
+                for(int i = 0; i < barWidth; ++i) {
+                    if(i < barLength){
+                        cout << "=";
+                    } else {
+                        cout << " ";
+                    }
+                }
+                cout << "] " << int(percentage * 100.0) << "%" << endl;
+                cout.flush();
+
+                this_thread::sleep_for(chrono::milliseconds(100)); //adjust for speed of bar
+            }
+
+            cout << endl;
+        }
+    }
+
+    void runD(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica, unordered_map<string, string> &countryToRegion){
+        thread functionThread([&americas, &polar, &oceania, &eurasica, &countryToRegion]() {
+            getData(americas, polar, oceania, eurasica, countryToRegion);
+        });
+
+        thread progressBarThread(&progressBar::showProgressBar, this);
+
+        functionThread.join();
+        progressBarThread.join();
+    }
+};

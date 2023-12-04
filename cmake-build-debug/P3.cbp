@@ -88,16 +88,13 @@
 		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/cityGraph.h">
 			<Option target="P3"/>
 		</Unit>
-		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/disjointSet.h">
+		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/country.h">
 			<Option target="P3"/>
 		</Unit>
 		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/fetchData.h">
 			<Option target="P3"/>
 		</Unit>
 		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/main.cpp">
-			<Option target="P3"/>
-		</Unit>
-		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/roadtrip.h">
 			<Option target="P3"/>
 		</Unit>
 		<Unit filename="C:/Users/Ananya Sista/Documents/UF/Fall 2023/COP3530/WhereIntheWorld/CMakeLists.txt">
