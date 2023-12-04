@@ -1,18 +1,16 @@
 #pragma once
 #include "disjointSet.h"
 #include <unordered_map>
-#include <unordered_set>
 #include <set>
 #include <bits/stdc++.h>
 #include <float.h>
 #include <iostream>
 #include <climits>
+#include <sstream>
 
 using namespace std;
 
 typedef pair<City, double> cPair; // node, distance
-
-
 
 class CityGraph {
 private:
@@ -23,7 +21,7 @@ private:
     };
     map<int, string> cityIDs;
     map<double, City> sortedLong;
-    void printTrip(City start, City end, map<City, cPair> parents, bool pathType){
+    string printTrip(City start, City end, map<City, cPair> parents, bool pathType){
         stack<City> roadtrip;
         City current = end;
         while(current != start){
@@ -31,6 +29,9 @@ private:
             current = parents[current].first;
         }
 
+        ostringstream output;
+        streambuf* p_cout_streambuf = cout.rdbuf();
+        cout.rdbuf(output.rdbuf());
         roadtrip.push(start);
 
         // testing country objects
@@ -46,27 +47,28 @@ private:
         int step = 1;
         double distance = 0;
         if(pathType){
-            while(!roadtrip.empty()){
-                if(step > 1){
+            while(!roadtrip.empty())
+            {
+                if (step > 1)
+                {
                     distance += parents[roadtrip.top()].second;
                 }
                 cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " | Distance so far: " << distance << endl;
                 roadtrip.pop();
                 step++;
             }
-            cout << "Total distance travelled: " << distance << endl;
         } else {
-            while(!roadtrip.empty()){
+            while(!roadtrip.empty())
+            {
                 distance = parents[roadtrip.top()].second;
                 cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " | Distance so far: " << distance << endl;
                 roadtrip.pop();
                 step++;
             }
-            cout << "Total distance travelled: " << distance << endl;
-
         }
-
-
+        cout << "Total distance travelled: " << distance << endl;
+        cout.rdbuf(p_cout_streambuf);
+        return output.str();
     }
 public:
     CityGraph(){
@@ -101,10 +103,14 @@ public:
         }
     }
 
-    void dijkstra(string st, string en) {
+    string dijkstra(string st, string en) {
         // used stepik code for reference
         City start = findCity(st);
         City end = findCity(en);
+        if(start == City() || end == City()){
+            return "Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n";
+        }
+
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         map<City, pair<City, double>> distance; // pair<Pred, Total Distance>
         for(auto city : regionGraph)
@@ -126,13 +132,16 @@ public:
             }
         }
 
-        printTrip(start, end, distance, false);
+        return printTrip(start, end, distance, false);
 
     }
 
-    void prim(string st, string en) {
+    string prim(string st, string en) {
         City start = findCity(st);
         City end = findCity(en);
+        if(start == City() || end == City()){
+            return "Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n";
+        }
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         // start is our source vector
         map<City, cPair> parent;
@@ -159,7 +168,7 @@ public:
             }
         }
 
-        printTrip(start, end, parent, true);
+        return printTrip(start, end, parent, true);
     }
 
     City findCity(string cityName) {

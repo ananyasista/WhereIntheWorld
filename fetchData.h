@@ -63,14 +63,12 @@ City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
 
 
 
-void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica)
+void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica, unordered_map<string, string> &countryToRegion)
 {
-    //CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
-    map<string, string> countryToRegion; // fill using countries.csv
     // create map of country name to country object which is to be used in parseCsv so I can add a country object
     unordered_map<string, Country> countryObjects;
 
-    map<string, int> regionToGraph; // use when adding cities to a graph
+    unordered_map<string, int> regionToGraph; // use when adding cities to a graph
     regionToGraph["Americas"] = 0;
     regionToGraph["Europe"] = 1;
     regionToGraph["Polar"] = 2;
@@ -166,4 +164,42 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     }
 
     file.close();
+}
+
+bool parseInput(string startCity, string startCountry, string endCity, string endCountry, unordered_map<string, string> countryToRegion){
+    string startRegion = countryToRegion[startCountry];
+    string endRegion = countryToRegion[endCountry];
+
+    //check that countries exist in our database
+    if(startRegion == "" || endRegion == "" ){
+        cout << "We couldn't find that country! Please check that it's spelled right." << endl;
+        return false;
+    }
+
+    // make sure start and destination are on the same landmass
+    if(startRegion != endRegion)
+    {
+        cout << "I don't think cars that can drive across the ocean have been made yet... please enter a destination that is connected by land!" << endl;
+        return false;
+    }
+
+    return true;
+}
+
+void printTrip(string itinerary){
+    ofstream tripFile;
+    tripFile.open("itinerary.txt");
+    tripFile << itinerary << endl << endl;
+    tripFile << "  ---------------------------.\n"
+                " `/\"\"\"\"/\"\"\"\"/|\"\"|'|\"\"||\"\"|   ' \\.\n"
+                " /    /    / |__| |__||__|      |\n"
+                "/----------=====================|\n"
+                "| \\  /V\\  /    _.               |\n"
+                "|()\\ \\W/ /()   _            _   |\n"
+                "|   \\   /     / \\          / \\  |-( )\n"
+                "=C========C==_| ) |--------| ) _/==] _-{Happy Driving!}_)\n"
+                " \\_\\_/__..  \\_\\_/_ \\_\\_/ \\_\\_/__.__.\n"
+                "--Line art by: TIM, from https://www.asciiart.eu/vehicles/cars--" << endl;
+
+    cout << "Your itinerary has been downloaded!" << endl;
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <vector>
 
 using namespace std;
 // update this class to properly represent our idea
@@ -12,9 +11,7 @@ private:
     string currency;
     string abbreviation;
     string timeZone; // maybe
-    string flagSvg; // stores location of svg file
-    // emoji - figure out how to store this (store as string I think)
-    // shape - figure out how to store this (store as string I think)
+    string flag; // stores location of svg file
 public:
     // create constructor
     Country (string n, string r, string cap, string c, string t, string a) {
@@ -24,7 +21,7 @@ public:
         currency = c;
         timeZone = t;
         abbreviation = a;
-        flagSvg = "../shapes/" + a + ".svg";
+        flag = "../countryFlags/" + a + ".png";
     }
     Country () {
         name = "";
@@ -32,7 +29,7 @@ public:
         currency = "";
         timeZone = "";
         abbreviation = "";
-        flagSvg = "";
+        flag = "";
     }
 
     void getCountryInfo () {
@@ -40,5 +37,9 @@ public:
         cout << "Region: " << region << endl;
         cout << "Capitol: " << capitol << endl;
         cout << "Currency: " << currency << endl;
+    }
+
+    string getFlag() {
+        return flag;
     }
 };

@@ -1,4 +1,6 @@
-
+#include <iostream>
+#include <fstream>
+using namespace std;
 // have a boolean keeping track of which algorithm is being used
 
 // calculating distance function
@@ -193,3 +195,4 @@
 //        rank[y]++;
 //    }
 //}
+
