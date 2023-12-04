@@ -167,17 +167,8 @@ int main()
     };
     State current = None;
 
-    //active editing??
+    //active editing?
     bool editing = false;
-
-//    //elles' scroll
-//    sf::Text scrollText;
-//    scrollText.setPosition(300, 400);
-//    scrollText.setFillColor(sf::Color::Black);
-//    scrollText.setString("dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n");
-//
-//    sf::View sidebarView(sf::FloatRect(0, 0, 300, 600));
-//    sf::View scrollingView(sf::FloatRect(300, 0, 800, 600));
 
     //dummy text for scroll
     std::string longtext = "dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697";
@@ -187,6 +178,8 @@ int main()
     longText.setCharacterSize(16);
     longText.setFillColor(sf::Color::Black);
     longText.setPosition(350.f, 100.f);
+
+    float scrollSpeed = 10.0f;
 
 
     //view for scrolling
@@ -203,23 +196,12 @@ int main()
             //scrolling
             if(event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::Up){
-                    view.move(0, -10);
+                    longText.move(0, -scrollSpeed);
                 }
                 else if(event.key.code == sf::Keyboard::Down) {
-                    view.move(0,10);
+                    longText.move(0,scrollSpeed);
                 }
             }
-
-//            // in pollEvent while loop ELLES
-//            if (event.type == sf::Event::KeyPressed) {
-//                if (event.key.code == sf::Keyboard::Up &&
-//                    scrollingView.getCenter().y - scrollingView.getSize().y / 2 > 0)
-//                    scrollingView.move(0, -10);
-//                else if (event.key.code == sf::Keyboard::Down &&
-//                         scrollingView.getCenter().y + scrollingView.getSize().y / 2 >
-//                         scrollText.getGlobalBounds().height)
-//                    scrollingView.move(0, 10);
-//            }
 
             //user input mouse
             if (event.type == sf::Event::MouseButtonPressed) {
@@ -309,24 +291,6 @@ int main()
                 }
             }
 
-//            //switch input when user press ENTER
-//            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-//                if(current == inputStartCity) {
-//                    current = inputStartCountry;
-//                }
-//                else if(current == inputStartCountry) {
-//                    current = inputDesCity;
-//                }
-//                else if(current == inputDesCity) {
-//                    current = inputDesCountry;
-//                }
-//                //temp test
-//                std::cout << "Start City: " << startCity.toAnsiString() << std::endl;
-//                std::cout << "Start Country: " << startCountry.toAnsiString() << std::endl;
-//                std::cout << "Destination City: " << cityDestination.toAnsiString() << std::endl;
-//                std::cout << "Destination Country: " << countryDestination.toAnsiString() << std::endl;
-//            }
-
             //driving button clicks
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
@@ -360,11 +324,12 @@ int main()
             }
         }
 
+
         window.clear(sf::Color(210, 180, 140));
 
 
         window.draw(background);
-        window.draw(topBar);
+//        window.draw(topBar);
         window.draw(logoSprite);
         window.draw(text);
 
@@ -409,16 +374,8 @@ int main()
         window.draw(resetText);
 
         //scrolling
-        window.setView(view);
+//        window.setView(view);
         window.draw(longText);
-
-
-        // scrolling ELLES
-//        // in while open loop
-//        window.setView(sidebarView);
-//
-//        window.setView(scrollingView);
-//        window.draw(scrollText);
 
         window.display();
 
