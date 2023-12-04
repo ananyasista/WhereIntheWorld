@@ -1,3 +1,0 @@
-C:/Users/strau/OneDrive/Desktop/COP3530/Projects/P3/cmake-build-debug/CMakeFiles/P3.dir
-C:/Users/strau/OneDrive/Desktop/COP3530/Projects/P3/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/strau/OneDrive/Desktop/COP3530/Projects/P3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
