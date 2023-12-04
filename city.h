@@ -19,14 +19,15 @@ private:
         return (one_deg * degree);
     }
     Country country;
-    string wikiDataCode;
+    string wikiDataLink;
 public:
-    City(int d, string n, string cN, double lon, double lat, Country c) {
+    City(int d, string n, string cN, double lon, double lat, string wd, Country c) {
         id = d;
         name = n;
         countryName = cN;
         longitude = lon;
         latitude = lat;
+        wikiDataLink = "https://www.wikidata.org/wiki/" + wd;
         country = c;
     }
 
@@ -36,6 +37,7 @@ public:
         countryName = "";
         longitude = -1;
         latitude = -1;
+        wikiDataLink = "";
     }
 
     string getName() const {
@@ -60,6 +62,10 @@ public:
 
     void getCountryObj() {
         country.getCountryInfo();
+    }
+
+    string getWikiDataLink() {
+        return wikiDataLink;
     }
 
     double distanceBetween(City a) {
