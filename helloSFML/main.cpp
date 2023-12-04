@@ -7,6 +7,9 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 800), "What In The World?");
 
+    //scrolling
+    sf::View view(sf::FloatRect(0.f, 0.f, 800.f, 800.f));
+
     // top bar
     sf::RectangleShape topBar(sf::Vector2f(800.f, 60.f));
     topBar.setFillColor(sf::Color::White);
@@ -57,11 +60,15 @@ int main()
     sf::Sprite pointSprite(pointTexture);
     float pointScale = 0.05;
     pointSprite.setScale(pointScale, pointScale);
-    pointSprite.setPosition(tripBox.getPosition().x - 30.f, tripBox.getPosition().y + 10.f);
+    pointSprite.setPosition(tripBox.getPosition().x + 10.f, tripBox.getPosition().y + 10.f);
+    sf::Sprite pointSprite2(pointTexture);
+    pointSprite2.setScale(pointScale, pointScale);
+    pointSprite2.setPosition(tripBox.getPosition().x + 10.f, tripBox.getPosition().y + 110.f);
+
 
     //start text
     sf::Text startText("Start:", font, 20);
-    startText.setPosition(tripBox.getPosition().x + 10.f, tripBox.getPosition().y + 10.f);
+    startText.setPosition(tripBox.getPosition().x + 40.f, tripBox.getPosition().y + 10.f);
     startText.setFillColor(sf::Color::Black);
 
     //start city box
@@ -88,8 +95,8 @@ int main()
 
 
     //destination text
-    sf::Text destText("Enter your Destination:", font, 20);
-    destText.setPosition(tripBox.getPosition().x + 10.f, tripBox.getPosition().y + 110.f);
+    sf::Text destText("Destination:", font, 20);
+    destText.setPosition(tripBox.getPosition().x + 40.f, tripBox.getPosition().y + 110.f);
     destText.setFillColor(sf::Color::Black);
 
     //destination city box
@@ -126,6 +133,7 @@ int main()
     sf::Text dijText("Dijkstra", font, 20);
     dijText.setPosition(dijkstraButton.getPosition().x + 30.f, dijkstraButton.getPosition().y + 5.f);
     dijText.setFillColor(sf::Color::White);
+    bool runDijkstra = false;
 
 
     //prims button
@@ -135,6 +143,7 @@ int main()
     sf::Text primText("Prims", font, 20);
     primText.setPosition(primsButton.getPosition().x + 30.f, primsButton.getPosition().y + 5.f);
     primText.setFillColor(sf::Color::White);
+    bool runPrims = false;
 
     //reset button
     sf::RectangleShape resetButton(sf::Vector2f(120.f, 30.f));
@@ -157,15 +166,31 @@ int main()
         inputDesCountry
     };
     State current = None;
+
+    //active editing??
     bool editing = false;
 
-    sf::Text scrollText;
-    scrollText.setPosition(300, 400);
-    scrollText.setFillColor(sf::Color::Black);
-    scrollText.setString("dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n");
+//    //elles' scroll
+//    sf::Text scrollText;
+//    scrollText.setPosition(300, 400);
+//    scrollText.setFillColor(sf::Color::Black);
+//    scrollText.setString("dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n");
+//
+//    sf::View sidebarView(sf::FloatRect(0, 0, 300, 600));
+//    sf::View scrollingView(sf::FloatRect(300, 0, 800, 600));
 
-    sf::View sidebarView(sf::FloatRect(0, 0, 300, 600));
-    sf::View scrollingView(sf::FloatRect(300, 0, 800, 600));
+    //dummy text for scroll
+    std::string longtext = "dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697";
+    sf::Text longText;
+    longText.setFont(font);
+    longText.setString(longtext);
+    longText.setCharacterSize(16);
+    longText.setFillColor(sf::Color::Black);
+    longText.setPosition(350.f, 100.f);
+
+
+    //view for scrolling
+//    sf::View scrollingView(sf::FloatRect (300.f, 0.f, 800.f, longText.getGlobalBounds().height)); //based on text height
 
     while (window.isOpen())
     {
@@ -175,16 +200,26 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            // in pollEvent while loop
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Up &&
-                    scrollingView.getCenter().y - scrollingView.getSize().y / 2 > 0)
-                    scrollingView.move(0, -10);
-                else if (event.key.code == sf::Keyboard::Down &&
-                         scrollingView.getCenter().y + scrollingView.getSize().y / 2 >
-                         scrollText.getGlobalBounds().height)
-                    scrollingView.move(0, 10);
+            //scrolling
+            if(event.type == sf::Event::KeyPressed) {
+                if(event.key.code == sf::Keyboard::Up){
+                    view.move(0, -10);
+                }
+                else if(event.key.code == sf::Keyboard::Down) {
+                    view.move(0,10);
+                }
             }
+
+//            // in pollEvent while loop ELLES
+//            if (event.type == sf::Event::KeyPressed) {
+//                if (event.key.code == sf::Keyboard::Up &&
+//                    scrollingView.getCenter().y - scrollingView.getSize().y / 2 > 0)
+//                    scrollingView.move(0, -10);
+//                else if (event.key.code == sf::Keyboard::Down &&
+//                         scrollingView.getCenter().y + scrollingView.getSize().y / 2 >
+//                         scrollText.getGlobalBounds().height)
+//                    scrollingView.move(0, 10);
+//            }
 
             //user input mouse
             if (event.type == sf::Event::MouseButtonPressed) {
@@ -192,14 +227,19 @@ int main()
 
                 if (startCityBox.getGlobalBounds().contains(mousePos)) {
                     current = inputStartCity;
+                    editing = true;
                 } else if (startCountryBox.getGlobalBounds().contains(mousePos)) {
                     current = inputStartCountry;
+                    editing = true;
                 } else if (destInputBox.getGlobalBounds().contains(mousePos)) {
                     current = inputDesCity;
+                    editing = true;
                 } else if (destCountryBox.getGlobalBounds().contains(mousePos)) {
                     current = inputDesCountry;
+                    editing = true;
                 } else {
                     current = None;
+                    editing = false;
                 }
             }
 
@@ -293,11 +333,17 @@ int main()
 
                 //dijkstra button
                 if (dijkstraButton.getGlobalBounds().contains(mousePos)) {
-                    cout << "Dijkstra Trip!" << endl; //call meethod here
+                    cout << "Dijkstra Trip!" << endl; //call method here
+                    std::cout << "Start City: " << startCity.toAnsiString() << std::endl;
+                    std::cout << "Start Country: " << startCountry.toAnsiString() << std::endl;
+                    std::cout << "Destination City: " << cityDestination.toAnsiString() << std::endl;
+                    std::cout << "Destination Country: " << countryDestination.toAnsiString() << std::endl;
+                    runDijkstra = true;
                     drivingWindow.setVisible(true);
                 }
                     //prims button
                 else if (primsButton.getGlobalBounds().contains(mousePos)) {
+                    runPrims = true; //when prims clicked on
                     cout << "Prims Trip!" << endl; //call method here
                     drivingWindow.setVisible(true);
                 } else if (resetButton.getGlobalBounds().contains(mousePos)) {
@@ -316,6 +362,7 @@ int main()
 
         window.clear(sf::Color(210, 180, 140));
 
+
         window.draw(background);
         window.draw(topBar);
         window.draw(logoSprite);
@@ -323,6 +370,7 @@ int main()
 
         window.draw(tripBox);
         window.draw(pointSprite);
+        window.draw(pointSprite2);
         window.draw(startText);
         window.draw(startCityBox);
         window.draw(startCityInput);
@@ -360,12 +408,17 @@ int main()
         window.draw(resetButton);
         window.draw(resetText);
 
-        // scrolling
+        //scrolling
+        window.setView(view);
+        window.draw(longText);
+
+
+        // scrolling ELLES
 //        // in while open loop
 //        window.setView(sidebarView);
 //
 //        window.setView(scrollingView);
-        window.draw(scrollText);
+//        window.draw(scrollText);
 
         window.display();
 
