@@ -7,34 +7,51 @@ int main()
     CityGraph polar("Polar");
     CityGraph oceania("Oceania");
     CityGraph eurasica("eurasica");
+    unordered_map<string, string> countryToRegion;
     std::cout << "Hello, World!" << std::endl;
     //call getData with the regions graph
-    getData(americas, polar, oceania, eurasica);
+    getData(americas, polar, oceania, eurasica, countryToRegion);
     cout << "Region Graph Size: " << endl;
     cout << "Americas Size: " << americas.getSize() << endl;
     cout << "Polar Size: " << polar.getSize() << endl;
     cout << "Eur Size: " << eurasica.getSize() << endl;
-    cout << "Oceania Size: " << oceania.getSize() << endl;
+    cout << "Oceania Size: " << oceania.getSize() << endl << endl;
+
+
     cout << "DIJKSTRA's --------------" << endl;
-    cout << "Paris to Rome: " << endl;
-    eurasica.dijkstra("Paris, IDF", "Rome, 62");
+    string start = "Tampa";
+    string end = "Jacksonville";
+    if(parseInput(start, "United States", end, "United States", countryToRegion)){
+        cout << americas.dijkstra(start, end);
+    }
+    string start1 = "Tampa, FL";
+    string end1 = "Jacksonville, FL";
+    if(parseInput(start1, "United States", end1, "United States", countryToRegion)){
+        string result = americas.dijkstra(start1, end1);
+        cout << result;
+        printTrip(result);
+    }
+
+//    americas.dijkstra("Tampa, FL", "Jacksonville, FL");
+//    americas.prim("Tampa, FL", "Jacksonville, FL");
+//    americas.prim("Tampa, FL", "Edgewood, FL");
+//    cout << "Sydney to Melbourne: " << endl;
+//    oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");
 //    cout << "Los Angeles to Durango, Mexico: " << endl;
 //    americas.dijkstra("Los Angeles, CA", "El Salto, DUR");
 //    cout << "Toronto to Miami: " << endl;
 //    americas.dijkstra("Toronto, ON", "Miami, FL");
+//    cout << "Rome to Stockholm: " << endl;
+//    cout << eurasica.dijkstra("Rome, 62", "Stockholm, AB");
+//    cout << endl;
+    cout << "PRIMS --------------" << endl;
+//    cout << "Sydney to Melbourne: " << endl;
+//    oceania.prim("Sydney, NSW", "Melbourne, VIC");
+//    cout << "Los Angeles to Durango, Mexico: " << endl;
+//    americas.prim("Los Angeles, CA", "El Salto, DUR");
 //    cout << "Toronto to Miami: " << endl;
-//    americas.dijkstra("Toronto, ON", "Miami, FL");
-//    americas.dijkstra("Miami Gardens, FL", "Carol City, FL");
-//    cout << "KRUSKAL's --------------" << endl;
-//    americas.kruskal("Villano Beach, FL", "Jacksonville, FL");
-//    cout << "Toronto to Miami: " << endl;
-//    americas.kruskal("Toronto, ON", "Miami, FL");
-//    cout << "Los Angeles to Durango Mexico: " << endl;
-//    americas.kruskal("Los Angeles, CA", "El Salto, DUR");
-//    cout << "Toronto to Miami: " << endl;
-//    americas.kruskal("Toronto, ON", "Miami, FL");
-//    cout << "Toronto to Miami: " << endl;
-//    americas.kruskal("Toronto, ON", "Miami, FL");
-
+//    americas.prim("Toronto, ON", "Miami, FL");
+//    cout << "Rome to Stockholm: " << endl;
+//    cout << eurasica.prim("Rome, 62", "Stockholm, AB");
     return 0;
 }

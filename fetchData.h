@@ -11,10 +11,7 @@
 using namespace std;
 // how are we getting data and building our graphs to be used in our program
 
-// https://www.codeproject.com/Articles/820116/Embedding-Python-program-in-a-C-Cplusplus-code
-// https://docs.python.org/3/extending/embedding.html
-
-City parseCsv(string &csvLine) {
+City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
     istringstream iss(csvLine);
     string val;
 
@@ -55,22 +52,23 @@ City parseCsv(string &csvLine) {
     double longitude;
     istringstream(val) >> longitude;
 
+    getline(iss, val, ',');
+    string wiki = val;
     //city name + code
     string cityName = cName + ", " + cityCode;
 
     //city object
-    return City(id, cityName, countryName, longitude, latitude);
+    return City(id, cityName, countryName, longitude, latitude, wiki, countryObjects[countryName]);
 };
 
 
 
-void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica)
+void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica, unordered_map<string, string> &countryToRegion)
 {
-    //CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
-    map<string, string> countryToRegion; // fill using countries.csv
+    // create map of country name to country object which is to be used in parseCsv so I can add a country object
+    unordered_map<string, Country> countryObjects;
 
-    // ISSUE HERE!
-    map<string, int> regionToGraph; // use when adding cities to a graph
+    unordered_map<string, int> regionToGraph; // use when adding cities to a graph
     regionToGraph["Americas"] = 0;
     regionToGraph["Europe"] = 1;
     regionToGraph["Polar"] = 2;
@@ -94,32 +92,42 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         getline(fileCountries, val, ',');
         getline(fileCountries, val, ',');
         string countryName = val;
-
+        // read abbreviation (3 letter version)
+        getline(fileCountries, val, ',');
+        string abrev = val;
+        // skip to capitol
+        for (int i = 0; i < 3; i++)
+            getline(fileCountries, val, ',');
+        // read capitol
+        getline(fileCountries, val, ',');
+        string cap = val;
+        getline(fileCountries, val, ',');
+        // read currency
+        getline(fileCountries, val, ',');
+        string curr = val;
         //skip to region
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             getline(fileCountries, val, ',');
         }
 
         //read region
         getline(fileCountries, val, ',');
         string region = val;
-
+        // skip to timezone
+        for (int i = 0; i < 3; i++)
+            getline(fileCountries, val, ',');
+        getline(fileCountries, val, ',');
+        string timez = val;
         countryToRegion.emplace(countryName, region);
-        //regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
+        Country c (countryName, region, cap, curr, timez, abrev);
+        countryObjects[countryName] = c;
     }
     fileCountries.close();
 
-//    //temp test
-//    for(auto pair : countryToRegion) {
-//        cout << "Country: " << pair.first << "Region: " << pair.second << endl;
-//    }
-
-
     cout << "COUNTRIES HAVE PARSED------------------" << endl;
-    //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
-    // wikiDataId
+    //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/cities.csv";
+    string citiesFile = "../ContinentsData/floridaCities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -127,46 +135,28 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         cout << "error" << endl;
         return;
     }
-    // cout << "here" << endl;
-    //Map to store city data
-    // map<string, vector<pair<string, double>>> cityMap;
-
-//    cout << countryToRegion["United States Minor Outlying Islands"] << endl;
 
     while(getline(file, line)) {
-        //temp test
-        City city = parseCsv(line);
-
-//        cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
-        //cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());
-//        regionToGraph["Americas"].insertCity(city);
-
-        //americas.insertCity(city);
+        City city = parseCsv(line, countryObjects);
 
         switch(regionToGraph[countryToRegion[city.getCountryName()]]) {
             case 0:
                 americas.insertCity(city);
-//                cout << "Americas added" << endl;
                 break;
             case 1:
                 eurasica.insertCity(city);
-//                cout << "Eurasica added" << endl;
                 break;
             case 2:
                 polar.insertCity(city);
-//                cout << "Polar added" << endl;
                 break;
             case 3:
                 oceania.insertCity(city);
-//                cout << "Oceania added" << endl;
                 break;
             case 4:
                 eurasica.insertCity(city);
-//                cout << "Eurasica added" << endl;
                 break;
             case 5:
                 eurasica.insertCity(city);
-//                cout << "Eurasica added" << endl;
                 break;
             default:
                 americas.insertCity(city);
@@ -174,5 +164,42 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     }
 
     file.close();
+}
 
+bool parseInput(string startCity, string startCountry, string endCity, string endCountry, unordered_map<string, string> countryToRegion){
+    string startRegion = countryToRegion[startCountry];
+    string endRegion = countryToRegion[endCountry];
+
+    //check that countries exist in our database
+    if(startRegion == "" || endRegion == "" ){
+        cout << "We couldn't find that country! Please check that it's spelled right." << endl;
+        return false;
+    }
+
+    // make sure start and destination are on the same landmass
+    if(startRegion != endRegion)
+    {
+        cout << "I don't think cars that can drive across the ocean have been made yet... please enter a destination that is connected by land!" << endl;
+        return false;
+    }
+
+    return true;
+}
+
+void printTrip(string itinerary){
+    ofstream tripFile;
+    tripFile.open("itinerary.txt");
+    tripFile << itinerary << endl << endl;
+    tripFile << "  ---------------------------.\n"
+                " `/\"\"\"\"/\"\"\"\"/|\"\"|'|\"\"||\"\"|   ' \\.\n"
+                " /    /    / |__| |__||__|      |\n"
+                "/----------=====================|\n"
+                "| \\  /V\\  /    _.               |\n"
+                "|()\\ \\W/ /()   _            _   |\n"
+                "|   \\   /     / \\          / \\  |-( )\n"
+                "=C========C==_| ) |--------| ) _/==] _-{Happy Driving!}_)\n"
+                " \\_\\_/__..  \\_\\_/_ \\_\\_/ \\_\\_/__.__.\n"
+                "--Line art by: TIM, from https://www.asciiart.eu/vehicles/cars--" << endl;
+
+    cout << "Your itinerary has been downloaded!" << endl;
 }

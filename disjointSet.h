@@ -48,23 +48,3 @@ typedef pair<City, double> cPair; // node, distance
 //};
 
 
-    City find(City child, map<City, City> parent){
-        if(child != parent[child]){
-            parent[child] = find(parent[child]);
-        }
-        return parent[child];
-    }
-
-    void merge(City x, City y, map<City, City> parent, map<City, int> rank){
-        x = find(x, parent);
-        y = find(y, parent);
-
-        if(rank[x] > rank[y]){
-            parent[y] = x;
-        } else {
-            parent[x] = y;
-        }
-
-        if(rank[x] == rank[y]){
-            rank[y]++;
-        }
