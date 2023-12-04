@@ -68,8 +68,8 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 {
     //CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
     map<string, string> countryToRegion; // fill using countries.csv
+    // create map of country name to country object which is to be used in parseCsv so I can add a country object
 
-    // ISSUE HERE!
     map<string, int> regionToGraph; // use when adding cities to a graph
     regionToGraph["Americas"] = 0;
     regionToGraph["Europe"] = 1;
@@ -116,8 +116,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 
 
     cout << "COUNTRIES HAVE PARSED------------------" << endl;
-    //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude,
-    // wikiDataId
+    //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
     string citiesFile = "../ContinentsData/cities.csv";
 

@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(P3 main.cpp
         city.h
-        roadtrip.h
+        country.h
         cityGraph.h
-        fetchData.h
-        disjointSet.h)
+        fetchData.h)

@@ -17,6 +17,8 @@ private:
         double one_deg = (M_PI) / 180;
         return (one_deg * degree);
     }
+    // add a country object attribute
+    // might add a wikidata attribute to allow for the user to see information about the city
 public:
     City(int d, string n, string cN, double lon, double lat) {
         id = d;
