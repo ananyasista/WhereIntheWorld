@@ -157,7 +157,7 @@ int main()
         inputDesCountry
     };
     State current = None;
-
+    bool editing = false;
 
     sf::Text scrollText;
     scrollText.setPosition(300, 400);
@@ -226,6 +226,46 @@ int main()
                     } else if (current == inputDesCountry) {
                         countryDestination += static_cast<char>(event.text.unicode);
                     }
+                }
+            }
+
+            //input editing
+            if(editing) {
+                if (sf::milliseconds(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space ? 1 : 0).asMilliseconds() > 500) {
+                    switch (current) {
+                        case inputStartCity:
+                            startCityInput.setString(startCity + "|");
+                            break;
+                        case inputStartCountry:
+                            startCountryInput.setString(startCountry + "|");
+                            break;
+                        case inputDesCity:
+                            desCityInput.setString(cityDestination + "|");
+                            break;
+                        case inputDesCountry:
+                            desCountryInput.setString(countryDestination + "|");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else {
+                switch(current) {
+                    case inputStartCity:
+                        startCityInput.setString(startCity);
+                        break;
+                    case inputStartCountry:
+                        startCountryInput.setString(startCountry);
+                        break;
+                    case inputDesCity:
+                        desCityInput.setString(cityDestination);
+                        break;
+                    case inputDesCountry:
+                        desCountryInput.setString(countryDestination);
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -330,7 +370,7 @@ int main()
         window.display();
 
         //driving window
-        sf::Event driving;gi
+        sf::Event driving;
         while(drivingWindow.pollEvent(driving)) {
             if(driving.type == sf::Event::Closed) {
                 drivingWindow.close();
