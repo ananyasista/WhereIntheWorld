@@ -150,134 +150,117 @@ int main()
 
     //user switch between start and destination
     enum State {
+        None,
         inputStartCity,
         inputStartCountry,
         inputDesCity,
         inputDesCountry
     };
-    State current = inputStartCity;
+    State current = None;
 
-    // scrolling trip iternary
-    sf::Text tripIternary("Trip Iternary: ", font, 20);
-    tripIternary.setFillColor(sf::Color::Black);
-    tripIternary.setPosition(350.f, 200.f);
-    tripIternary.setString("Testing (Add Backend function here to get Iternary)\nTest\na\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nyay");
-    sf::View view(sf::FloatRect(0, 0, 800, 800));
 
-    //text box editing
-    bool editing = false;
+    sf::Text scrollText;
+    scrollText.setPosition(300, 400);
+    scrollText.setFillColor(sf::Color::Black);
+    scrollText.setString("dummy data:\n--------Start Country Information----------\n Country: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nStart City WikiData Information: https://www.wikidata.org/wiki/Q49255\n--------End Country Information----------\nCountry: United States\nRegion: Americas\nCapitol: Washington\nCurrency: United States dollar\nEnd City WikiData Information: https://www.wikidata.org/wiki/Q49255\n********************************************************\n1. Tampa, FL, United States | Distance so far: 0\n2. Hill 'n Dale, FL, United States | Distance so far: 40.6768\n3. Marion County, FL, United States | Distance so far: 90.5566\n4. Interlachen, FL, United States | Distance so far: 120.798\n5. Orange Park, FL, United States | Distance so far: 159.834\n6. Jacksonville, FL, United States | Distance so far: 171.697\nTotal distance travelled: 171.697\n");
+
+    sf::View sidebarView(sf::FloatRect(0, 0, 300, 600));
+    sf::View scrollingView(sf::FloatRect(300, 0, 800, 600));
+
     while (window.isOpen())
     {
         sf::Event event;
 
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
 
+            // in pollEvent while loop
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Up &&
+                    scrollingView.getCenter().y - scrollingView.getSize().y / 2 > 0)
+                    scrollingView.move(0, -10);
+                else if (event.key.code == sf::Keyboard::Down &&
+                         scrollingView.getCenter().y + scrollingView.getSize().y / 2 >
+                         scrollText.getGlobalBounds().height)
+                    scrollingView.move(0, 10);
+            }
+
+            //user input mouse
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
+                if (startCityBox.getGlobalBounds().contains(mousePos)) {
+                    current = inputStartCity;
+                } else if (startCountryBox.getGlobalBounds().contains(mousePos)) {
+                    current = inputStartCountry;
+                } else if (destInputBox.getGlobalBounds().contains(mousePos)) {
+                    current = inputDesCity;
+                } else if (destCountryBox.getGlobalBounds().contains(mousePos)) {
+                    current = inputDesCountry;
+                } else {
+                    current = None;
+                }
+            }
+
+
             //user input
-            if(event.type == sf::Event::TextEntered) {
-                if(event.text.unicode == 8) {
-                    if(current == inputStartCity && !startCity.isEmpty()) {
-                        startCity.erase(startCity.getSize() -1);
-                    }
-                    else if (current == inputStartCountry && !startCountry.isEmpty()) {
+            if (event.type == sf::Event::TextEntered) {
+                if (event.text.unicode == 8) {
+                    if (current == inputStartCity && !startCity.isEmpty()) {
+                        startCity.erase(startCity.getSize() - 1);
+                    } else if (current == inputStartCountry && !startCountry.isEmpty()) {
                         startCountry.erase(startCountry.getSize() - 1);
-                    }
-                    else if (current == inputDesCity && !cityDestination.isEmpty()) {
+                    } else if (current == inputDesCity && !cityDestination.isEmpty()) {
                         cityDestination.erase(cityDestination.getSize() - 1);
-                    }
-                    else if (current == inputDesCountry && !countryDestination.isEmpty()) {
+                    } else if (current == inputDesCountry && !countryDestination.isEmpty()) {
                         countryDestination.erase(countryDestination.getSize() - 1);
                     }
-                }
-                else if (event.text.unicode >= 32 && event.text.unicode <= 126) {
-                    if(current == inputStartCity) {
+                } else if (event.text.unicode >= 32 && event.text.unicode <= 126) {
+                    if (current == inputStartCity) {
                         startCity += static_cast<char>(event.text.unicode);
-                    }
-                    else if(current == inputStartCountry) {
+                    } else if (current == inputStartCountry) {
                         startCountry += static_cast<char>(event.text.unicode);
-                    }
-                    else if(current == inputDesCity) {
+                    } else if (current == inputDesCity) {
                         cityDestination += static_cast<char>(event.text.unicode);
-                    }
-                    else if(current == inputDesCountry) {
+                    } else if (current == inputDesCountry) {
                         countryDestination += static_cast<char>(event.text.unicode);
                     }
                 }
-
-//                //user input mouse click
-//                if(event.type == sf::Event::MouseButtonPressed){
-//                    sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
-//
-//                    //start city
-//                    if(startCityBox.getGlobalBounds().contains(mousePos)) {
-//                        editing = !editing;
-//                        if(editing) {
-//                            startCity.clear();
-//                        }
-//                    } else if(startCountryBox.getGlobalBounds().contains(mousePos)) {
-//                        editing = !editing;
-//                        if(editing) {
-//                            startCountry.clear();
-//                        }
-//                    } else if(desCityInput.getGlobalBounds().contains(mousePos)) {
-//                        editing = !editing;
-//                        if (editing) {
-//                            cityDestination.clear();
-//                        }
-//                    } else if(desCountryInput.getGlobalBounds().contains(mousePos)) {
-//                        editing = !editing;
-//                        if (editing) {
-//                            countryDestination.clear();
-//                        }
-//                    }
-//                }
             }
 
-            //switch input when user press ENTER
-            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-                if(current == inputStartCity) {
-                    current = inputStartCountry;
-                }
-                else if(current == inputStartCountry) {
-                    current = inputDesCity;
-                }
-                else if(current == inputDesCity) {
-                    current = inputDesCountry;
-                }
-                //temp test
-                std::cout << "Start City: " << startCity.toAnsiString() << std::endl;
-                std::cout << "Start Country: " << startCountry.toAnsiString() << std::endl;
-                std::cout << "Destination City: " << cityDestination.toAnsiString() << std::endl;
-                std::cout << "Destination Country: " << countryDestination.toAnsiString() << std::endl;
-            }
-
-
-//            //input editing mode
-//            if(editing) {
-//                if (sf::milliseconds(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space ? 1 : 0).asMilliseconds() > 500) {
-//                    startCityInput.setString(startCity + "|");
-//                } else {
-//                    startCityInput.setString(startCity);
+//            //switch input when user press ENTER
+//            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+//                if(current == inputStartCity) {
+//                    current = inputStartCountry;
 //                }
+//                else if(current == inputStartCountry) {
+//                    current = inputDesCity;
+//                }
+//                else if(current == inputDesCity) {
+//                    current = inputDesCountry;
+//                }
+//                //temp test
+//                std::cout << "Start City: " << startCity.toAnsiString() << std::endl;
+//                std::cout << "Start Country: " << startCountry.toAnsiString() << std::endl;
+//                std::cout << "Destination City: " << cityDestination.toAnsiString() << std::endl;
+//                std::cout << "Destination Country: " << countryDestination.toAnsiString() << std::endl;
 //            }
 
             //driving button clicks
-            if(event.type == sf::Event::MouseButtonPressed)
-            {
+            if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 
                 //dijkstra button
-                if(dijkstraButton.getGlobalBounds().contains(mousePos)) {
+                if (dijkstraButton.getGlobalBounds().contains(mousePos)) {
                     cout << "Dijkstra Trip!" << endl; //call meethod here
                     drivingWindow.setVisible(true);
                 }
-                //prims button
-                else if(primsButton.getGlobalBounds().contains(mousePos)) {
+                    //prims button
+                else if (primsButton.getGlobalBounds().contains(mousePos)) {
                     cout << "Prims Trip!" << endl; //call method here
                     drivingWindow.setVisible(true);
-                } else if(resetButton.getGlobalBounds().contains(mousePos)) {
+                } else if (resetButton.getGlobalBounds().contains(mousePos)) {
                     //resets input fields
                     startCity.clear();
                     startCountry.clear();
@@ -289,16 +272,7 @@ int main()
                     cout << "Trip Reset!" << endl;
                 }
             }
-            // scrolling
-            if(event.type == sf::Event::KeyPressed) {
-                if(event.key.code == sf::Keyboard::Up and view.getCenter().y - view.getSize().y / 2 > 0) {
-                    view.move(0, -10);
-                } else if (event.key.code == sf::Keyboard::Down and view.getCenter().y + view.getSize().y / 2 < tripIternary.getGlobalBounds().height)
-                        view.move(0, 10);
-            }
         }
-        // scrolling
-        window.setView(view);
 
         window.clear(sf::Color(210, 180, 140));
 
@@ -347,12 +321,16 @@ int main()
         window.draw(resetText);
 
         // scrolling
-        window.draw(tripIternary);
+//        // in while open loop
+//        window.setView(sidebarView);
+//
+//        window.setView(scrollingView);
+        window.draw(scrollText);
 
         window.display();
 
         //driving window
-        sf::Event driving;
+        sf::Event driving;gi
         while(drivingWindow.pollEvent(driving)) {
             if(driving.type == sf::Event::Closed) {
                 drivingWindow.close();
@@ -365,24 +343,3 @@ int main()
     return 0;
 }
 
-/*.
-     * sf::Text tripIternary("Trip Iternary: ", font, 20);
-     * tripIternary.setFillColor(sf::Color::Black);
-     * tripIternay.setPosition(tripBox.getPosition().x + 300.f, tripBox.getPosition().y + 40.f);
-     * tripIternary.setString("Testing (Add Backend function here to get Iternary) aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-     * sf::View view(sf::FloatRect(300, 60, 800, 800));
- * add to poll Event while loop
- * if(event.type == sf::Event::KeyPressed) {
- * switch(event.key.code) {
- * case sf::Keyboard::Up:
- * view.move(0, -10);
- * break;
- * case sf::Keyboard::Down:
- * view.move(0, 10);
- * break;
- * default:
- * break;
- * }
- * window.setView(view);
- * window.draw(tripIternary);
- * */
