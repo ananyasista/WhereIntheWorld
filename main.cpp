@@ -20,12 +20,13 @@ int main()
     // cout << "BELLMAN FORD----------------" << endl;
 //    americas.bellmanFord("Tampa, FL", "Jacksonville, FL");
     cout << "DIJKSTRA's --------------" << endl;
-    cout << "Sydney to Melbourne: " << endl;
-    oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");
+    americas.dijkstra("Tampa, FL", "Jacksonville, FL");
+    // cout << "Sydney to Melbourne: " << endl;
+    //oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");
     // cout << "Bellman-Ford's --------------" << endl;
     // oceania.bellmanFord("Sydney, NSW", "Melbourne, VIC");
-    cout << "PRIMS --------------" << endl;
-    oceania.prim("Sydney, NSW", "Melbourne, VIC");
+    // cout << "PRIMS --------------" << endl;
+    //oceania.prim("Sydney, NSW", "Melbourne, VIC");
 //    cout << "Los Angeles to Durango, Mexico: " << endl;
 //    americas.dijkstra("Los Angeles, CA", "El Salto, DUR");
 //    cout << "Toronto to Miami: " << endl;

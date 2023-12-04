@@ -14,7 +14,7 @@ using namespace std;
 // https://www.codeproject.com/Articles/820116/Embedding-Python-program-in-a-C-Cplusplus-code
 // https://docs.python.org/3/extending/embedding.html
 
-City parseCsv(string &csvLine) {
+City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
     istringstream iss(csvLine);
     string val;
 
@@ -59,7 +59,7 @@ City parseCsv(string &csvLine) {
     string cityName = cName + ", " + cityCode;
 
     //city object
-    return City(id, cityName, countryName, longitude, latitude);
+    return City(id, cityName, countryName, longitude, latitude, countryObjects[countryName]);
 };
 
 
@@ -69,6 +69,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     //CityGraph americas("americas"), polar("polar"), oceania("oceania"), eurasica("eurasica");
     map<string, string> countryToRegion; // fill using countries.csv
     // create map of country name to country object which is to be used in parseCsv so I can add a country object
+    unordered_map<string, Country> countryObjects;
 
     map<string, int> regionToGraph; // use when adding cities to a graph
     regionToGraph["Americas"] = 0;
@@ -94,17 +95,35 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
         getline(fileCountries, val, ',');
         getline(fileCountries, val, ',');
         string countryName = val;
-
+        // read abbreviation (3 letter version)
+        getline(fileCountries, val, ',');
+        string abrev = val;
+        // skip to capitol
+        for (int i = 0; i < 3; i++)
+            getline(fileCountries, val, ',');
+        // read capitol
+        getline(fileCountries, val, ',');
+        string cap = val;
+        getline(fileCountries, val, ',');
+        // read currency
+        getline(fileCountries, val, ',');
+        string curr = val;
         //skip to region
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             getline(fileCountries, val, ',');
         }
 
         //read region
         getline(fileCountries, val, ',');
         string region = val;
-
+        // skip to timezone
+        for (int i = 0; i < 3; i++)
+            getline(fileCountries, val, ',');
+        getline(fileCountries, val, ',');
+        string timez = val;
         countryToRegion.emplace(countryName, region);
+        Country c (countryName, region, cap, curr, timez, abrev);
+        countryObjects[countryName] = c;
         //regionToGraph[countryToRegion[city.getCountryName()]].insertCity(city);
     }
     fileCountries.close();
@@ -118,7 +137,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/cities.csv";
+    string citiesFile = "../ContinentsData/floridaCities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -134,7 +153,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
 
     while(getline(file, line)) {
         //temp test
-        City city = parseCsv(line);
+        City city = parseCsv(line, countryObjects);
 
 //        cout << "ID: " << city.getId() << ", City Name: " << city.getName() << ", Country Name: " << city.getCountryName() << ", Latitude: " << city.getLatitude() << ", Longitude: " << city.getLongitude() << endl;
         //cityMap[city.getName()].emplace_back(city.getCountryName(), city.getLatitude());

@@ -3,6 +3,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include <unordered_map>
+#include "country.h"
 
 using namespace std;
 
@@ -17,15 +18,16 @@ private:
         double one_deg = (M_PI) / 180;
         return (one_deg * degree);
     }
-    // add a country object attribute
-    // might add a wikidata attribute to allow for the user to see information about the city
+    Country country;
+    string wikiDataCode;
 public:
-    City(int d, string n, string cN, double lon, double lat) {
+    City(int d, string n, string cN, double lon, double lat, Country c) {
         id = d;
         name = n;
         countryName = cN;
         longitude = lon;
         latitude = lat;
+        country = c;
     }
 
     City() { // default constructor
@@ -54,6 +56,10 @@ public:
 
     int getId() const{
         return id;
+    }
+
+    void getCountryObj() {
+        country.getCountryInfo();
     }
 
     double distanceBetween(City a) {

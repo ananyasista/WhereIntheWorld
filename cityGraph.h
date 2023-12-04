@@ -103,6 +103,12 @@ public:
 
         roadtrip.push(start);
 
+        // testing country objects
+        cout << "--------Start Country Information----------" << endl;
+        start.getCountryObj();
+        cout << "--------End Country Information----------" << endl;
+        end.getCountryObj();
+
         // print trip
         int step = 1;
         while(!roadtrip.empty()){
@@ -158,7 +164,6 @@ public:
             current = distance[current].first;
         }
 
-        roadtrip.push(start);
 
         // print trip
         int step = 1;
