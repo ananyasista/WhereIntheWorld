@@ -15,9 +15,17 @@ int main()
     cout << "Polar Size: " << polar.getSize() << endl;
     cout << "Eur Size: " << eurasica.getSize() << endl;
     cout << "Oceania Size: " << oceania.getSize() << endl;
+
+//    americas.prim("Tampa, FL", "Jacksonville, FL");
+    // cout << "BELLMAN FORD----------------" << endl;
+//    americas.bellmanFord("Tampa, FL", "Jacksonville, FL");
     cout << "DIJKSTRA's --------------" << endl;
-    cout << "Paris to Rome: " << endl;
-    eurasica.dijkstra("Paris, IDF", "Rome, 62");
+    cout << "Sydney to Melbourne: " << endl;
+    oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");
+    // cout << "Bellman-Ford's --------------" << endl;
+    // oceania.bellmanFord("Sydney, NSW", "Melbourne, VIC");
+    cout << "PRIMS --------------" << endl;
+    oceania.prim("Sydney, NSW", "Melbourne, VIC");
 //    cout << "Los Angeles to Durango, Mexico: " << endl;
 //    americas.dijkstra("Los Angeles, CA", "El Salto, DUR");
 //    cout << "Toronto to Miami: " << endl;

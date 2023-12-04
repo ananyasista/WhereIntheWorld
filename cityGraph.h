@@ -61,8 +61,8 @@ public:
             if(dist <= 50){
                 regionGraph[it->second].push_back(make_pair(start, dist));
                 regionGraph[start].push_back(make_pair(it->second, dist));
-                edgeList.insert({dist, {start, it->second}});
-                edgeList.insert({dist, {it->second, start}});
+//                edgeList.insert({dist, {start, it->second}});
+//                edgeList.insert({dist, {it->second, start}});
             }
         }
     }
@@ -111,74 +111,190 @@ public:
             step++;
         }
     }
-    void kruskal(string st, string en) {
-        // use stepik module 8 solutions
+    void bellmanFord(string st, string en) {
         City start = findCity(st);
         City end = findCity(en);
-        map<City, vector<cPair>> mst;
-//        DisjointSet ds;
-////        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
-//        double totalDistance = 0;
-//        for(const auto& entry : edgeList){
-//            double w = entry.first;
-//            pair<City, City> p = entry.second;
-//            City u = p.first;
-//            City v = p.second;
-//            City x = ds.findRoot(u);
-//            City y = ds.findRoot(v);
-//            if(x != y) {
-//                mst[u].push_back(make_pair(v, w));
-//                mst[v].push_back(make_pair(u, w));
-//                ds.unionSet(x, y);
-//            }
-//        }
+        map<City, cPair> distance; // pair<Pred, Total Distance>
+        for(auto city : regionGraph)
+            distance[city.first] = make_pair(City(), DBL_MAX);
+        distance[start] = make_pair(City(), 0);
 
-        map<City, City> parent;
-        map<City, int> rank;
-
-        for(auto city : regionGraph){
-            parent[city.first] = city.first;
-            rank[city.first] = 0;
-        }
-
-        for(auto edge : edgeList){
-            City u = edge.second.first;
-            City v = edge.second.second;
-
-            
-        }
-
-        //dfs from kapoor's lecture
-        set<City> visited;
-        stack<City> s;
-        s.push(start);
-        visited.insert(start);
-        map<City, cPair> parent;
-        //parent[start] = make_pair(City(), -1);
-        double kTotalDistance = 0;
-
-        while(!s.empty())
-        {
-            City u = s.top();
-            s.pop();
-
-            for (auto pair: regionGraph[u])
-            {
-                City v = pair.first;
-                if (visited.find(v) == visited.end())
-                {
-                    visited.insert(v);
-                    parent[v] = make_pair(u, pair.second);
-                    s.push(v);
+        // relax all edges
+        for(int i = 0; i < regionGraph.size() - 1; ++i) {
+            for (auto vertex: regionGraph) {
+                City curr = vertex.first;
+                for (auto edge: vertex.second) {
+                    City neighbor = edge.first; // destination
+                    double w = edge.second;
+                    if (distance[curr].second != DBL_MAX && distance[curr].second + w < distance[neighbor].second) {
+                        distance[neighbor] = make_pair(curr, distance[curr].second + w);
+                    }
                 }
             }
         }
 
+        // check for negative cycles; above doesn't guarantee shortest distance if graph doesn't contain negative
+        // weight cycle. if we get shorter path, then there is a cycle
+        // but since we don't have any negative weight we will ignore this step
+
+//        for (auto vertex: regionGraph)
+//        {
+//            for (auto edge: vertex.second)
+//            {
+//                City u = vertex.first; // source not changing
+//                City v = edge.first; // destination
+//                double w = edge.second;
+//                if (distance[u].second != DBL_MAX && distance[u].second + w < distance[v].second)
+//                {
+//                    cout << "Graph contains negative weight cycle" << endl;
+//                    return;
+//                }
+//            }
+//        }
         stack<City> roadtrip;
         City current = end;
-        while(current != start) {
+        while(current != start){
             roadtrip.push(current);
-            kTotalDistance += parent[current].second;
+            current = distance[current].first;
+        }
+
+        roadtrip.push(start);
+
+        // print trip
+        int step = 1;
+        while(!roadtrip.empty()){
+            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << " Distance"" Between: " << distance[roadtrip.top()].second << endl;
+            roadtrip.pop();
+            step++;
+        }
+    }
+//    void kruskal(string st, string en) {
+//        // use stepik module 8 solutions
+//        City start = findCity(st);
+//        City end = findCity(en);
+//        map<City, vector<cPair>> mst;
+////        DisjointSet ds;
+//////        multimap<double, pair<City, City>> edgeList = ds.makeSet(regionGraph);
+////        double totalDistance = 0;
+////        for(const auto& entry : edgeList){
+////            double w = entry.first;
+////            pair<City, City> p = entry.second;
+////            City u = p.first;
+////            City v = p.second;
+////            City x = ds.findRoot(u);
+////            City y = ds.findRoot(v);
+////            if(x != y) {
+////                mst[u].push_back(make_pair(v, w));
+////                mst[v].push_back(make_pair(u, w));
+////                ds.unionSet(x, y);
+////            }
+////        }
+//
+//        map<City, City> parent;
+//        map<City, int> rank;
+//
+//        for(auto city : regionGraph){
+//            parent[city.first] = city.first;
+//            rank[city.first] = 0;
+//        }
+//
+//        for(auto edge : edgeList){
+//            City u = edge.second.first;
+//            City v = edge.second.second;
+//
+//            City set_u = find(u, parent);
+//            City set_v = find(v, parent);
+//
+//            if(set_u != set_v){
+//                mst[u].push_back(make_pair(v, edge.first));
+//                merge(set_u, set_v, parent, rank);
+//            }
+//
+//        }
+//
+//        //dfs from kapoor's lecture
+//        set<City> visited;
+//        stack<City> s;
+//        s.push(start);
+//        visited.insert(start);
+//        map<City, cPair> relations;
+//        //parent[start] = make_pair(City(), -1);
+//        double kTotalDistance = 0;
+//
+//        while(!s.empty())
+//        {
+//            City u = s.top();
+//            s.pop();
+//
+//            for (auto pair: mst[u])
+//            {
+//                City v = pair.first;
+//                if (visited.find(v) == visited.end())
+//                {
+//                    visited.insert(v);
+//                    relations[v] = make_pair(u, pair.second);
+//                    s.push(v);
+//                }
+//            }
+//        }
+//
+//        stack<City> roadtrip;
+//        City current = end;
+//        while(current != start) {
+//            roadtrip.push(current);
+//            kTotalDistance += relations[current].second;
+//            current = relations[current].first;
+//        }
+//
+//        roadtrip.push(start);
+//
+//        // print trip
+//        int step = 1;
+//        while(!roadtrip.empty()){
+//            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() <<
+//            "Distance Between: " << relations[roadtrip.top()].second << endl;
+//            roadtrip.pop();
+//            step++;
+//        }
+//        cout << "Total Distance: " << kTotalDistance << endl;
+//    }
+
+    void prim(string st, string en) {
+        City start = findCity(st);
+        City end = findCity(en);
+        priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
+        // start is our source vector
+        map<City, cPair> parent;
+        for(auto city : regionGraph)
+            parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
+        set<City> inMst;
+        pq.push(make_pair(start, 0)); // add source vertex to min heap
+
+        while(!pq.empty()) {
+            cPair uPair = pq.top();
+            City u = pq.top().first;
+            pq.pop();
+
+            if (inMst.find(u) != inMst.end())
+                continue;
+            inMst.insert(u);
+            for (auto pair: regionGraph[u]) {
+                City v = pair.first; // child
+                double w = pair.second;
+                if(inMst.find(v) == inMst.end() && parent[v].second > w) {
+                    parent[v] = make_pair(u, w);
+                    pq.push(make_pair(v, parent[v].second));
+                }
+            }
+        }
+
+
+        stack<City> roadtrip;
+        double totalDistance = 0;
+        City current = end;
+        while(current != start){
+            roadtrip.push(current);
+            totalDistance += parent[current].second;
             current = parent[current].first;
         }
 
@@ -188,63 +304,12 @@ public:
         int step = 1;
         while(!roadtrip.empty()){
             cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() <<
-            "Distance Between: " << parent[roadtrip.top()].second << endl;
+            " Distance so far: " << parent[roadtrip.top()].second << endl;
             roadtrip.pop();
             step++;
         }
-        cout << "Total Distance: " << kTotalDistance << endl;
+        cout << "Total Distance To Travel: " << totalDistance << endl;
     }
-
-//    void prim(string st, string en) {
-//        City start = findCity(st);
-//        City end = findCity(en);
-//        priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
-//        // start is our source vector
-//        map<City, cPair> parent;
-//        for(auto city : regionGraph)
-//            parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
-//        set<City> inMst;
-//        pq.push(make_pair(start, 0)); // add source vertex to min heap
-//
-//        while(!pq.empty()) {
-//            cPair uPair = pq.top();
-//            City u = pq.top().first;
-//            pq.pop();
-//
-//            if (inMst.find(u) != inMst.end())
-//                continue;
-//            inMst.insert(u);
-//            for (auto pair: regionGraph[u]) {
-//                City v = pair.first; // child
-//                double w = pair.second;
-//                if(inMst.find(v) == inMst.end() && parent[v].second > w) {
-//                    parent[v] = uPair;
-//                    pq.push(make_pair(v, parent[v].second));
-//                }
-//            }
-//        }
-//
-//
-//        stack<City> roadtrip;
-//        double totalDistance = 0;
-//        City current = end;
-//        while(current != start){
-//            roadtrip.push(current);
-//            totalDistance += parent[current].second;
-//            current = parent[current].first;
-//        }
-//
-//        roadtrip.push(start);
-//
-//        // print trip
-//        int step = 1;
-//        while(!roadtrip.empty()){
-//            cout << step << ". " << roadtrip.top().getName() << ", " << roadtrip.top().getCountryName() << endl;
-//            roadtrip.pop();
-//            step++;
-//        }
-//        cout << "Total Distance To Travel: " << totalDistance << endl;
-//    }
 
     City findCity(string cityName) {
         for(auto city : regionGraph) {
@@ -252,5 +317,32 @@ public:
                 return city.first;
         }
         return City();
+    }
+
+    City find(City child, map<City, City> parent){
+        if(child != parent[child]){
+            parent[child] = find(parent[child], parent);
+        }
+        return parent[child];
+    }
+
+    void merge(City x, City y, map<City, City> &parent, map<City, int> &rank)
+    {
+        x = find(x, parent);
+        y = find(y, parent);
+
+        if (rank[x] > rank[y])
+        {
+            parent[y] = x;
+        }
+        else
+        {
+            parent[x] = y;
+        }
+
+        if (rank[x] == rank[y])
+        {
+            rank[y]++;
+        }
     }
 };
