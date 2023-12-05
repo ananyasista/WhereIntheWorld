@@ -33,7 +33,7 @@ int main()
     }
 
 //    americas.dijkstra("Tampa, FL", "Jacksonville, FL");
-//    americas.prim("Tampa, FL", "Jacksonville, FL");
+    cout << americas.prim("Tampa, FL", "Jacksonville, FL");
 //    americas.prim("Tampa, FL", "Edgewood, FL");
 //    cout << "Sydney to Melbourne: " << endl;
 //    oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");

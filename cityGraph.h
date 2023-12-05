@@ -15,13 +15,13 @@ typedef pair<City, double> cPair; // node, distance
 class CityGraph {
 private:
     string region;
-    map<City, vector<pair<City, double>>> regionGraph; // weight will distance
+    unordered_map<City, vector<pair<City, double>>, City::Hash> regionGraph; // weight will distance
     function<bool(const cPair&, const cPair&)> minDistanceComp = [] (const cPair &one, const cPair &two) {
         return one.second > two.second;
     };
-    map<int, string> cityIDs;
+    unordered_map<int, string> cityIDs;
     map<double, City> sortedLong;
-    string printTrip(City start, City end, map<City, cPair> parents, bool pathType){
+    string printTrip(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
         stack<City> roadtrip;
         City current = end;
         while(current != start){
@@ -112,7 +112,7 @@ public:
         }
 
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
-        map<City, pair<City, double>> distance; // pair<Pred, Total Distance>
+        unordered_map<City, pair<City, double>, City::Hash> distance; // pair<Pred, Total Distance>
         for(auto city : regionGraph)
             distance.emplace(city.first, make_pair(City(), DBL_MAX));
         distance[start] = make_pair(City(), 0);
@@ -144,10 +144,10 @@ public:
         }
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         // start is our source vector
-        map<City, cPair> parent;
+        unordered_map<City, cPair, City::Hash> parent;
         for(auto city : regionGraph)
             parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
-        set<City> inMst;
+        unordered_set<City, City::Hash> inMst;
         pq.push(make_pair(start, 0)); // add source vertex to min heap
 
         while(!pq.empty()) {

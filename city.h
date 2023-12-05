@@ -102,4 +102,17 @@ public:
     bool operator==(const City &city) const {
         return id == city.getId();
     }
+
+    struct Hash {
+        size_t operator()(const City& city) const {
+            size_t hashValue = 0;
+            hashValue ^= hash<string>{}(city.name);
+            hashValue ^= hash<int>{}(city.id);
+            hashValue ^= hash<string>{}(city.countryName);
+            hashValue ^= hash<double>{}(city.longitude);
+            hashValue ^= hash<double>{}(city.latitude);
+
+            return hashValue;
+        }
+    };
 };
