@@ -12,6 +12,7 @@ using namespace std;
 // how are we getting data and building our graphs to be used in our program
 
 City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
+    // parsing our city csv lines and creates city objects to be inserted in to a cityGraph object
     istringstream iss(csvLine);
     string val;
 
@@ -54,6 +55,7 @@ City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
 
     getline(iss, val, ',');
     string wiki = val;
+
     //city name + code
     string cityName = cName + ", " + cityCode;
 
@@ -63,19 +65,10 @@ City parseCsv(string &csvLine, unordered_map<string, Country> countryObjects) {
 
 
 
-void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica, unordered_map<string, string> &countryToRegion)
+void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGraph &eurasica, unordered_map<string, string> &countryToRegion, unordered_map<string, int> regionToGraph)
 {
     // create map of country name to country object which is to be used in parseCsv so I can add a country object
     unordered_map<string, Country> countryObjects;
-
-    unordered_map<string, int> regionToGraph; // use when adding cities to a graph
-    regionToGraph["Americas"] = 0;
-    regionToGraph["Europe"] = 1;
-    regionToGraph["Polar"] = 2;
-    regionToGraph["Oceania"] = 3;
-    regionToGraph["Asia"] = 4;
-    regionToGraph["Africa"] = 5;
-
 
     //parse through countrytoregions and find the americas region
     //Need: name, 10, region
@@ -124,10 +117,10 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     }
     fileCountries.close();
 
-    cout << "COUNTRIES HAVE PARSED------------------" << endl;
+    // cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/cities.csv";
+    string citiesFile = "../ContinentsData/smallerSet_cities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -166,27 +159,38 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     file.close();
 }
 
-bool parseInput(string startCity, string startCountry, string endCity, string endCountry, unordered_map<string, string> countryToRegion){
+vector<string> parseInput(string startCity, string startCountry, string endCity, string endCountry, unordered_map<string, string> countryToRegion){
+    // validating user input
     string startRegion = countryToRegion[startCountry];
     string endRegion = countryToRegion[endCountry];
+    vector<string> output;
 
     //check that countries exist in our database
     if(startRegion == "" || endRegion == "" ){
-        cout << "We couldn't find that country! Please check that it's spelled right." << endl;
-        return false;
+        output.push_back("We couldn't find that country!\nPlease check that it's spelled right.\n");
+        output.push_back("");
+        output.push_back("");
+        return output;
     }
 
     // make sure start and destination are on the same landmass
     if(startRegion != endRegion)
     {
-        cout << "I don't think cars that can drive across the ocean have been made yet... please enter a destination that is connected by land!" << endl;
-        return false;
+        output.push_back("I don't think cars that can drive across\n the ocean have been made yet... \nplease enter a destination that is connected by land!\n");
+        output.push_back("");
+        output.push_back("");
+        return output;
     }
 
-    return true;
+    output.push_back("");
+    output.push_back("");
+    output.push_back("");
+    return output;
+
 }
 
 void printTrip(vector<string> itinerary){
+    // creates a downloadable text file with the trip path
     ofstream tripFile;
     tripFile.open("itinerary.txt");
     tripFile << itinerary[1] << itinerary[2] << itinerary[0] << endl << endl;

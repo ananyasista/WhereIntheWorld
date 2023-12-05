@@ -69,6 +69,8 @@ public:
     }
 
     double distanceBetween(City a) {
+        // calculates distance between two cities based on lat and long
+        // got formula of how to calculate from:
         // https://www.geeksforgeeks.org/program-distance-two-points-earth/
         // convert to radians
         double lat1 = toRadians(latitude);
@@ -83,12 +85,8 @@ public:
 
         distance = 2 * asin(sqrt(distance));
 
-        double rad = 3956; // in miles
+        double rad = 3956; // help with putting result in miles
         return distance * rad;
-    }
-
-    string findContinent(unordered_map<string, string> countryList){
-        return countryList[countryName];
     }
 
     bool operator<(const City &city) const {
@@ -104,6 +102,7 @@ public:
     }
 
     struct Hash {
+        // our hash to create an unordered map with City objects as the key
         size_t operator()(const City& city) const {
             size_t hashValue = 0;
             hashValue ^= hash<string>{}(city.name);

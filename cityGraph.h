@@ -6,6 +6,7 @@
 #include <iostream>
 #include <climits>
 #include <sstream>
+#include "City.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ private:
     };
     unordered_map<int, string> cityIDs;
     map<double, City> sortedLong;
+    // helper to print our trip path
     vector<string> printPath(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
         vector<string> result;
         stack<City> roadtrip;
@@ -79,22 +81,23 @@ private:
         result.push_back(trip.str());
         result.push_back(startCountry.str());
         result.push_back(endCountry.str());
+        cout << result.size() << endl;
         return result;
     }
 public:
-    CityGraph(){
+    CityGraph(){ // default constructor
         region = "";
     }
 
-    CityGraph(string regName) {
+    CityGraph(string regName) { // constructor
         region = regName;
     }
 
-    string getName() {
+    string getName() { // used for debugging
         return region;
     }
 
-    int getSize() {
+    int getSize() { // used for debugging
         return regionGraph.size();
     }
 
@@ -191,6 +194,7 @@ public:
     }
 
     City findCity(string cityName) {
+        // finds if city exists in the graph, if not returns a default city object
         for(auto city : regionGraph) {
             if(cityName == city.first.getName())
                 return city.first;

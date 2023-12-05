@@ -2,16 +2,16 @@
 #include <string>
 
 using namespace std;
-// update this class to properly represent our idea
+
 class Country {
 private:
     string name;
-    string region; // maybe
+    string region;
     string capitol;
     string currency;
     string abbreviation;
-    string timeZone; // maybe
-    string flag; // stores location of svg file
+    string timeZone;
+    string flag; // stores location of image file
 public:
     // create constructor
     Country (string n, string r, string cap, string c, string t, string a) {
@@ -40,6 +40,6 @@ public:
     }
 
     string getFlag() {
-        return flag;
+        return flag; // was going to be used but never got chance to implement idea for our frontend
     }
 };
