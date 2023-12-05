@@ -1,0 +1,66 @@
+--------Start Country Information----------
+Country: United States
+Region: Americas
+Capitol: Washington
+Currency: United States dollar
+Start City WikiData Information: https://www.wikidata.org/wiki/Q487999
+--------End Country Information----------
+Country: United States
+Region: Americas
+Capitol: Washington
+Currency: United States dollar
+End City WikiData Information: https://www.wikidata.org/wiki/Q487999
+********************************************************
+1. Gainesville, FL, United States | Distance so far: 0
+2. Waldo, FL, United States | Distance so far: 13.419
+3. Bradford County, FL, United States | Distance so far: 24.4852
+4. Lake Butler, FL, United States | Distance so far: 35.8677
+5. Union County, FL, United States | Distance so far: 38.2664
+6. Watertown, FL, United States | Distance so far: 56.0465
+7. Lake City, FL, United States | Distance so far: 57.5341
+8. Five Points, FL, United States | Distance so far: 58.8813
+9. Wellborn, FL, United States | Distance so far: 69.8579
+10. Suwannee County, FL, United States | Distance so far: 80.4037
+11. Mayo, FL, United States | Distance so far: 95.1304
+12. Perry, FL, United States | Distance so far: 119.904
+13. Madison County, FL, United States | Distance so far: 143.425
+14. Monticello, FL, United States | Distance so far: 168.291
+15. Jefferson County, FL, United States | Distance so far: 176.87
+16. Woodville, FL, United States | Distance so far: 198.874
+17. Tallahassee, FL, United States | Distance so far: 207.674
+18. Leon County, FL, United States | Distance so far: 209.05
+19. Havana, FL, United States | Distance so far: 223.091
+20. Quincy, FL, United States | Distance so far: 233.426
+21. Gadsden County, FL, United States | Distance so far: 235.306
+22. Gretna, FL, United States | Distance so far: 239.093
+23. Chattahoochee, FL, United States | Distance so far: 251.703
+24. Sneads, FL, United States | Distance so far: 256.442
+25. Bristol, FL, United States | Distance so far: 275.712
+26. Blountstown, FL, United States | Distance so far: 279.976
+27. Calhoun County, FL, United States | Distance so far: 289.266
+28. Youngstown, FL, United States | Distance so far: 303.909
+29. Bay County, FL, United States | Distance so far: 318.427
+30. Hiland Park, FL, United States | Distance so far: 320.979
+31. Cedar Grove, FL, United States | Distance so far: 323.053
+32. Panama City, FL, United States | Distance so far: 325.269
+33. Pretty Bayou, FL, United States | Distance so far: 328.644
+34. Upper Grand Lagoon, FL, United States | Distance so far: 332.143
+35. Lower Grand Lagoon, FL, United States | Distance so far: 333.595
+36. Panama City Beach, FL, United States | Distance so far: 337.558
+37. Laguna Beach, FL, United States | Distance so far: 345.868
+38. Seaside, FL, United States | Distance so far: 360.002
+39. Miramar Beach, FL, United States | Distance so far: 373.443
+40. Destin, FL, United States | Distance so far: 381.722
+Total distance travelled: 381.722
+
+
+  ---------------------------.
+ `/""""/""""/|""|'|""||""|   ' \.
+ /    /    / |__| |__||__|      |
+/----------=====================|
+| \  /V\  /    _.               |
+|()\ \W/ /()   _            _   |
+|   \   /     / \          / \  |-( )
+=C========C==_| ) |--------| ) _/==] _-{Happy Driving!}_)
+ \_\_/__..  \_\_/_ \_\_/ \_\_/__.__.
+--Line art by: TIM, from https://www.asciiart.eu/vehicles/cars--

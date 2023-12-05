@@ -120,7 +120,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     // cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/smallerSet_cities.csv";
+    string citiesFile = "../ContinentsData/cities.csv";
 
     //open csv file
     ifstream file(citiesFile);
