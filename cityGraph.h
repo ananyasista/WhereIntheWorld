@@ -23,7 +23,7 @@ private:
     function<bool(const cPair&, const cPair&)> minDistanceComp = [] (const cPair &one, const cPair &two) {
         return one.second > two.second;
     };
-    map<int, string> cityIDs;
+    unordered_map<int, string> cityIDs;
     map<double, City> sortedLong;
     string printPath(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
         stack<City> roadtrip;
@@ -152,7 +152,7 @@ public:
         unordered_map<City, cPair, City::Hash> parent;
         for(auto city : regionGraph)
             parent.insert(make_pair(city.first, make_pair(City(),DBL_MAX)));
-        set<City> inMst;
+        unordered_set<City, City::Hash> inMst;
         pq.push(make_pair(start, 0)); // add source vertex to min heap
 
         while(!pq.empty()) {
