@@ -19,21 +19,28 @@ int main()
 
 
     cout << "DIJKSTRA's --------------" << endl;
-    string start = "Tampa";
-    string end = "Jacksonville";
-    if(parseInput(start, "United States", end, "United States", countryToRegion)){
-        cout << americas.dijkstra(start, end);
+    string start = "Rome, 62";
+    string end = "Stockholm, AB";
+    if(parseInput(start, "Ilkj", end, "Sweden", countryToRegion)){
+        vector<string> output = eurasica.dijkstra(start, end);
+        cout << output[1] << output[2] << output[0];
     }
-    string start1 = "Tampa, FL";
-    string end1 = "Jacksonville, FL";
-    if(parseInput(start1, "United States", end1, "United States", countryToRegion)){
-        string result = americas.dijkstra(start1, end1);
-        cout << result;
-        printTrip(result);
+    string start1 = "Rome, 62";
+    string end1 = "Stockholm, AB";
+    if(parseInput(start1, "Italy", end1, "Sweden", countryToRegion)){
+        vector<string> output = eurasica.dijkstra(start1, end1);
+        cout << output[1] << output[2] << output[0];
+        printTrip(output);
     }
 
+    cout << "PRIMS --------------" << endl;
+
 //    americas.dijkstra("Tampa, FL", "Jacksonville, FL");
-    cout << americas.prim("Tampa, FL", "Jacksonville, FL");
+    if(parseInput(start1, "Italy", end1, "Sweden", countryToRegion)){
+        vector<string> output = eurasica.prim(start1, end1);
+        cout << output[1] << output[2] << output[0];
+        printTrip(output);
+    }
 //    americas.prim("Tampa, FL", "Edgewood, FL");
 //    cout << "Sydney to Melbourne: " << endl;
 //    oceania.dijkstra("Sydney, NSW", "Melbourne, VIC");
@@ -44,7 +51,7 @@ int main()
 //    cout << "Rome to Stockholm: " << endl;
 //    cout << eurasica.dijkstra("Rome, 62", "Stockholm, AB");
 //    cout << endl;
-    cout << "PRIMS --------------" << endl;
+
 //    cout << "Sydney to Melbourne: " << endl;
 //    oceania.prim("Sydney, NSW", "Melbourne, VIC");
 //    cout << "Los Angeles to Durango, Mexico: " << endl;

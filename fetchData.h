@@ -127,7 +127,7 @@ void getData(CityGraph &americas, CityGraph &polar, CityGraph &oceania, CityGrap
     cout << "COUNTRIES HAVE PARSED------------------" << endl;
     //id, name, state_id, state_code, state_name, country_id, country_code, country_name, latitude, longitude, wikiDataId
     //Need: name, city code, country_name, lat, long
-    string citiesFile = "../ContinentsData/floridaCities.csv";
+    string citiesFile = "../ContinentsData/cities.csv";
 
     //open csv file
     ifstream file(citiesFile);
@@ -186,10 +186,10 @@ bool parseInput(string startCity, string startCountry, string endCity, string en
     return true;
 }
 
-void printTrip(string itinerary){
+void printTrip(vector<string> itinerary){
     ofstream tripFile;
     tripFile.open("itinerary.txt");
-    tripFile << itinerary << endl << endl;
+    tripFile << itinerary[1] << itinerary[2] << itinerary[0] << endl << endl;
     tripFile << "  ---------------------------.\n"
                 " `/\"\"\"\"/\"\"\"\"/|\"\"|'|\"\"||\"\"|   ' \\.\n"
                 " /    /    / |__| |__||__|      |\n"

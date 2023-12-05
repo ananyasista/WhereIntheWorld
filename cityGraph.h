@@ -21,7 +21,8 @@ private:
     };
     unordered_map<int, string> cityIDs;
     map<double, City> sortedLong;
-    string printTrip(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
+    vector<string> printPath(City start, City end, unordered_map<City, cPair, City::Hash> parents, bool pathType){
+        vector<string> result;
         stack<City> roadtrip;
         City current = end;
         while(current != start){
@@ -29,20 +30,27 @@ private:
             current = parents[current].first;
         }
 
-        ostringstream output;
+        ostringstream startCountry;
+        ostringstream endCountry;
+        ostringstream trip;
         streambuf* p_cout_streambuf = cout.rdbuf();
-        cout.rdbuf(output.rdbuf());
+
         roadtrip.push(start);
 
+        cout.rdbuf(startCountry.rdbuf());
         // testing country objects
         cout << "--------Start Country Information----------" << endl;
         start.getCountryObj();
         cout << "Start City WikiData Information: " << start.getWikiDataLink() << endl;
+        cout.rdbuf(p_cout_streambuf);
+        cout.rdbuf(endCountry.rdbuf());
         cout << "--------End Country Information----------" << endl;
         end.getCountryObj();
         cout << "End City WikiData Information: " << start.getWikiDataLink() << endl;
         cout << "********************************************************" << endl;
+        cout.rdbuf(p_cout_streambuf);
 
+        cout.rdbuf(trip.rdbuf());
         // print trip; false indicates Dijikstra's, true indicates Prims
         int step = 1;
         double distance = 0;
@@ -68,7 +76,11 @@ private:
         }
         cout << "Total distance travelled: " << distance << endl;
         cout.rdbuf(p_cout_streambuf);
-        return output.str();
+
+        result.push_back(trip.str());
+        result.push_back(startCountry.str());
+        result.push_back(endCountry.str());
+        return result;
     }
 public:
     CityGraph(){
@@ -103,12 +115,16 @@ public:
         }
     }
 
-    string dijkstra(string st, string en) {
+    vector<string> dijkstra(string st, string en) {
         // used stepik code for reference
         City start = findCity(st);
         City end = findCity(en);
+        vector<string> result;
         if(start == City() || end == City()){
-            return "Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n";
+            result.push_back("Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n");
+            result.push_back("");
+            result.push_back("");
+            return result;
         }
 
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
@@ -132,15 +148,19 @@ public:
             }
         }
 
-        return printTrip(start, end, distance, false);
+        return printPath(start, end, distance, false);
 
     }
 
-    string prim(string st, string en) {
+    vector<string> prim(string st, string en) {
         City start = findCity(st);
         City end = findCity(en);
+        vector<string> result;
         if(start == City() || end == City()){
-            return "Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n";
+            result.push_back("Hmmm, we couldn't find one of those cities. Check that it's spelled and formatted right!\n");
+            result.push_back("");
+            result.push_back("");
+            return result;
         }
         priority_queue<cPair, vector<cPair>, decltype(minDistanceComp)> pq(minDistanceComp);
         // start is our source vector
@@ -168,7 +188,7 @@ public:
             }
         }
 
-        return printTrip(start, end, parent, true);
+        return printPath(start, end, parent, true);
     }
 
     City findCity(string cityName) {
